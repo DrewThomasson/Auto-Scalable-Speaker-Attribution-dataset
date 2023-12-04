@@ -23,7 +23,10 @@ The hope for this is to use this methology to create a speaker attribution datas
 
 For the first test, I used a snippet from "Guardians of Ga'Hoole" in the `ebooks` folder. The results are impressive:
 
-- GPT-4 achieved a remarkable 98.33% accuracy rate for speaker attribution.
+- GPT-4 achieved a remarkable 98.33% accuracy rate for speaker attributio for the first run.
+- On the second run of the same piece of text GPT achieved 96.67% accuracy rating.
+- given this it appears to still have a arguable very high accuracy rate these could be imporived through improved prompting or increasing the context length given to the LLM
+- the second reults can be found under the file "quotes_updated.csv" in the ebooks folder in this repo
 
 ## Speaker Attribution Results
 
