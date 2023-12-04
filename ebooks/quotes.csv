@@ -1,0 +1,61 @@
+Quote,Start Location,End Location,Is Quote,Speaker
+"“Look. I might be blind, but I know that you’ve been out there all morning. Why aren’t you in your hollows sleeping?”",126,243,True,Octavia
+"“the Band,”",414,425,True,Octavia
+"“Oh, and now Otulissa! What are you doing here?”",565,613,True,Octavia
+“The same thing they are doing.”,615,647,True,Otulissa
+“Waiting for Soren to come out. He’s been in there reading for days now!”,690,763,True,Otulissa
+“What’s this all about?”,823,847,True,Soren
+"“It’s about us, Soren.”",926,949,True,Otulissa
+"“What is it, Otulissa?”",1551,1574,True,Coryn
+"“We want to hear the legends, too. We want to read them with you.”",1589,1655,True,Otulissa
+“I thought it was just going to be us? How did she horn in on it?”,1696,1762,True,Gylfie
+"“You know Otulissa,”",1764,1784,True,Digger
+"“Look, Soren,”",1816,1830,True,Otulissa
+"“I am the one responsible for teaching the legends and the cantos to the young’uns here at the tree. I am the ryb for Ga’Hoology, which includes the natural history of the tree and its owl history.”",1851,2049,True,Otulissa
+"“I think you should hear the legends, Otulissa…”",2396,2444,True,Coryn
+“And you as well. It is only fitting. But let me warn you that there is strong stuff in these legends. There are truths that will make your gizzards quake.”,2518,2674,True,Coryn
+“Come back at midnight.”,2841,2865,True,Coryn
+“Would it be possible to end night flight early and begin reading the second legend then?”,2899,2989,True,Coryn
+"“Yes, we shall end early, and Soren will meet with you first to tell you what we learned in the first legend before we read the second.”",3496,3632,True,Coryn
+“Before I begin I should tell you that neither Coryn nor myself is sure who wrote this second volume of the legends.”,4436,4553,True,Soren
+"“You can’t be serious, milady,”",5761,5792,True,Lord Arrin
+“I am deadly serious. Stand back.”,5811,5845,True,Siv
+“My dear.”,5847,5857,True,Lord Arrin
+“No ‘my dears.’”,5859,5875,True,Siv
+"“All right, milady. Save yourself and save your young’un. Join us. You can be my consort, my queen, the queen of nachtmagen.”",5877,6002,True,Lord Arrin
+"“I am already a queen. Queen of the N’yrthghar. I need no other court, no other kingdom.”",6004,6093,True,Siv
+“But this is your court.”,6233,6258,True,Lord Arrin
+“Never.”,6260,6268,True,Siv
+"“I ask you again, milady. Has the egg hatched yet?”",6662,6713,True,Lord Arrin
+“Where is the egg right now?”,6737,6766,True,Lord Arrin
+“The moon’s shell is breaking!”,7983,8014,True,Siv
+"“Quick, Siv, on my back!”",8281,8306,True,Svenka
+"“Welcome, little one. Welcome, Hoole.”",10128,10166,True,Grank
+"“Welcome, Hoole.”",10461,10478,True,Grank
+“prince.”,10571,10580,True,"The text does not provide information on who said ""prince."""
+"“The worms! Theo, do we have the worms?”",10763,10803,True,Grank
+"“Of course, right here.”",10828,10852,True,Theo
+"“Here, I’ll take that,”",10922,10945,True,Grank
+"“First worm, Hoole, this is your First Worm ceremony. May Glaux bless you and make your gizzard strong.”",11252,11356,True,Grank
+“Atta boy!”,11407,11418,True,Grank
+"“Oops, sorry, lad.”",11478,11497,True,Grank
+"“The lad’s a natural, an absolute natural.”",11745,11788,True,Grank
+“Theo!”,13181,13188,True,Grank
+"“Yes, sir.”",13190,13201,True,Theo
+“Can you fetch us another field mouse?”,13203,13242,True,Grank
+"“Maybe I’ll try for a vole, Grank. That might fill him up.”",13383,13442,True,Theo
+"“Oh, a vole! A vole! I want a vole!”",13444,13480,True,Hoole
+"“Theo, will you really get me a vole?”",13639,13677,True,Hoole
+"“I’ll try, Hoole.”",13679,13697,True,Theo
+"“Back up there, lad,”",13699,13720,True,Grank
+“We don’t want you taking a tumble off this branch. Your down won’t work for flying.”,13733,13818,True,Grank
+"“When will my first flight feathers come in, Uncle Grank?”",13820,13878,True,Hoole
+“Not until your fluff falls out. Your first molt.”,13880,13930,True,Grank
+“When will that happen?”,13932,13956,True,Hoole
+“When you start to budge.”,13958,13984,True,Grank
+“Have I started yet?”,13986,14007,True,Hoole
+“No. You’d feel it.”,14009,14029,True,Grank
+"“Maybe not, Uncle Grank. Take a look please, please!”",14031,14084,True,Hoole
+"“All right, now wave good-bye to Theo.”",14100,14139,True,Grank
+"“Bye, Theo! Uncle Grank’s going to see if I’ve started to budge. Maybe by the time you get back I will have a flight feather.”",14141,14267,True,Hoole
+"“Oh, my!”",14269,14278,True,Grank
