@@ -16,6 +16,10 @@ The hope for this is to use this methology to create a speaker attribution datas
 ## manual_results_checker.py
 <img width="386" alt="Screenshot 2023-12-04 at 5 03 13 PM" src="https://github.com/DrewThomasson/Auto-Scalable-Speaker-Attribution-dataset/assets/126999465/388cc144-b9df-4e10-b6ae-5ee9431eae53">
 
+-once you click the "save changes" button itll show you the accuracy rating in a popup like so:
+<img width="259" alt="Screenshot 2023-12-04 at 5 40 00 PM" src="https://github.com/DrewThomasson/Auto-Scalable-Speaker-Attribution-dataset/assets/126999465/84d87a71-6e9e-41c6-8856-54b240c1b8a6">
+
+
 - This python script will give you a easy to use gui to manually check the output results of the speaker attribution via LLM
 - give it the refrence txt file and then give it the quotes.csv file that was generated after running the speaker_find_attribute.py
 
