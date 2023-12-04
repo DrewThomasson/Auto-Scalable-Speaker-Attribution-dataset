@@ -2,6 +2,8 @@
 
 This is my attempt at implementing a method for scaling speaker attribution datasets for literature using GPT or any other capable Large Language Model (LLM).
 
+The hope for this is to use this methology to create a speaker attribution dataset for nearly all books found in project gutenburg
+
 ## Test Results
 
 For the first test, I used a snippet from "Guardians of Ga'Hoole" in the `ebooks` folder. The results are impressive:
