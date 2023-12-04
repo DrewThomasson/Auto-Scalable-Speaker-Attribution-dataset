@@ -1,79 +1,77 @@
-# Auto-Scalable-Speaker-Attribution-dataset
-This is my attempt at implementing a method for scaling speaker attribution datasets for literature by using GPT or any other capable LLM
+\# Auto-Scalable Speaker Attribution Dataset
 
-For the first test I used a snippet from guardians of gahool in the ebooks folder, 
-The results are a 98.3333% accuracy rating when using GPT4 for speaker attribution
+This is my attempt at implementing a method for scaling speaker attribution datasets for literature using GPT or any other capable Large Language Model (LLM).
 
-I had to handlook through the each speaker attribution GPT4 assigned and had these reults in order of all 60 quotes found in the snippet from guardians of gahool:
+## Test Results
 
-:True means it was correct
+For the first test, I used a snippet from "Guardians of Ga'Hoole" in the `ebooks` folder. The results are impressive:
 
-:Fase means it was incorrect
+- GPT-4 achieved a remarkable 98.33% accuracy rate for speaker attribution.
 
-:True/incorrect quotation means the quote wasnt nessisary a quote being said by a character but if you had to assign it to a characrter that would be the correct answer:
+## Speaker Attribution Results
 
-Results:
+I meticulously reviewed each speaker attribution assigned by GPT-4 and categorized the results for all 60 quotes found in the snippet from "Guardians of Ga'Hoole" as follows:
 
-True
-True/incorrect quotation
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-False
-True/incorrect quotation
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
-True
+- **True:** Correct attribution
+- **False:** Incorrect attribution
+- **True/Incorrect Quotation:** The quote may not have been said by a character, but if assigned, this would be the correct answer.
 
+### Attribution Breakdown
 
-
+- True
+- True/Incorrect Quotation
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- False
+- True/Incorrect Quotation
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
+- True
