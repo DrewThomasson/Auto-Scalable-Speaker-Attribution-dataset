@@ -1,0 +1,61 @@
+quote_start	quote_end	mention_start	mention_end	mention_phrase	char_id	quote
+26	55	56	56	She	11	“ Look . I might be blind , but I know that you ’ve been out there all morning . Why are n’t you in your hollows sleeping ? ”
+94	98	84	84	Soren	14	“ the Band , ”
+127	140	182	182	their	37	“ Oh , and now Otulissa ! What are you doing here ? ”
+141	149	152	152	her	15	“ The same thing they are doing . ”
+158	176	152	152	her	15	“ Waiting for Soren to come out . He ’s been in there reading for days now ! ”
+189	196	182	182	their	37	“ What ’s this all about ? ”
+215	223	224	224	Otulissa	15	“ It ’s about us , Soren . ”
+354	361	362	362	Coryn	16	“ What is it , Otulissa ? ”
+365	383	331	331	She	15	“ We want to hear the legends , too . We want to read them with you . ”
+391	410	384	384	Gylfie	18	“ I thought it was just going to be us ? How did she horn in on it ? ”
+411	416	417	417	Digger	13	“ You know Otulissa , ”
+422	427	428	428	Otulissa	15	“ Look , Soren , ”
+431	472	428	428	Otulissa	15	“ I am the one responsible for teaching the legends and the cantos to the young’uns here at the tree . I am the ryb for Ga’Hoology , which includes the natural history of the tree and its owl history . ”
+548	559	560	560	Coryn	16	“ I think you should hear the legends , Otulissa … ”
+575	610	611	611	He	16	“ And you as well . It is only fitting . But let me warn you that there is strong stuff in these legends . There are truths that will make your gizzards quake . ”
+648	654	644	644	he	16	“ Come back at midnight . ”
+663	681	660	660	he	16	“ Would it be possible to end night flight early and begin reading the second legend then ? ”
+793	824	776	776	he	14	“ Yes , we shall end early , and Soren will meet with you first to tell you what we learned in the first legend before we read the second . ”
+987	1011	975	975	Soren	14	“ Before I begin I should tell you that neither Coryn nor myself is sure who wrote this second volume of the legends . ”
+1251	1260	1261	1262	Lord Arrin	23	“ You ca n’t be serious , milady , ”
+1265	1274	1245	1245	she	21	“ I am deadly serious . Stand back . ”
+1275	1279	1245	1245	she	21	“ My dear . ”
+1280	1287	1245	1245	she	21	“ No ‘ my dears . ’ ”
+1288	1318	1245	1245	she	21	“ All right , milady . Save yourself and save your young’un . Join us . You can be my consort , my queen , the queen of nachtmagen . ”
+1319	1341	1245	1245	she	21	“ I am already a queen . Queen of the N’yrthghar . I need no other court , no other kingdom . ”
+1369	1376	1355	1367	the half dozen hagsfiends who were now closing in on her from above	80	“ But this is your court . ”
+1377	1380	1383	1383	her	81	“ Never . ”
+1464	1478	1479	1479	Siv	21	“ I ask you again , milady . Has the egg hatched yet ? ”
+1483	1491	1479	1479	Siv	21	“ Where is the egg right now ? ”
+1747	1755	1756	1757	one hagsfiend	90	“ The moon ’s shell is breaking ! ”
+1815	1824	1825	1825	Svenka	26	“ Quick , Siv , on my back ! ”
+2196	2206	2175	2175	Grank	25	“ Welcome , little one . Welcome , Hoole . ”
+2271	2276	2277	2277	Theo	30	“ Welcome , Hoole . ”
+2296	2299	2288	2288	Grank	25	“ prince . ”
+2340	2352	2353	2353	Grank	25	“ The worms ! Theo , do we have the worms ? ”
+2357	2364	2365	2365	Theo	30	“ Of course , right here . ”
+2381	2389	2390	2390	Grank	25	“ Here , I ’ll take that , ”
+2457	2480	2452	2452	he	25	“ First worm , Hoole , this is your First Worm ceremony . May Glaux bless you and make your gizzard strong . ”
+2492	2496	2497	2497	Grank	25	“ Atta boy ! ”
+2508	2515	2500	2500	Hoole	20	“ Oops , sorry , lad . ”
+2567	2578	2586	2588	A natural eater	123	“ The lad ’s a natural , an absolute natural . ”
+2859	2862	2844	2844	Grank	25	“ Theo ! ”
+2863	2868	2844	2844	Grank	25	“ Yes , sir . ”
+2869	2878	2844	2844	Grank	25	“ Can you fetch us another field mouse ? ”
+2911	2928	2844	2844	Grank	25	“ Maybe I ’ll try for a vole , Grank . That might fill him up . ”
+2929	2943	2944	2944	Theo	30	“ Oh , a vole ! A vole ! I want a vole ! ”
+2980	2991	2961	2961	he	20	“ Theo , will you really get me a vole ? ”
+2992	2999	2844	2844	Grank	25	“ I ’ll try , Hoole . ”
+3000	3007	3008	3008	Grank	25	“ Back up there , lad , ”
+3011	3032	3008	3008	Grank	25	“ We do n’t want you taking a tumble off this branch . Your down wo n’t work for flying . ”
+3033	3046	3106	3106	Grank	25	“ When will my first flight feathers come in , Uncle Grank ? ”
+3047	3059	3008	3008	Grank	25	“ Not until your fluff falls out . Your first molt . ”
+3060	3066	3106	3106	Grank	25	“ When will that happen ? ”
+3067	3074	3008	3008	Grank	25	“ When you start to budge . ”
+3075	3081	3106	3106	Grank	25	“ Have I started yet ? ”
+3082	3090	3008	3008	Grank	25	“ No . You ’d feel it . ”
+3091	3105	3106	3106	Grank	25	“ Maybe not , Uncle Grank . Take a look please , please ! ”
+3109	3121	3106	3106	Grank	25	“ All right , now wave good - bye to Theo . ”
+3122	3154	3008	3008	Grank	25	“ Bye , Theo ! Uncle Grank ’s going to see if I ’ve started to budge . Maybe by the time you get back I will have a flight feather . ”
+3155	3160	3106	3106	Grank	25	“ Oh , my ! ”
