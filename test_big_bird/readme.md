@@ -5,3 +5,5 @@ The `quotes+whoSaidQuote+contentAroundQuotes.py` file will use the booknlp outpu
 
 
 the g_book folder is just a folder that contains the outputs of a booknlprun on a test bookk of guradians of gahhool but i think its just the first chapter anyway lol
+
+the bigbird.py will train bigbird on the csv file named output.csv on the task of quotation attribution
