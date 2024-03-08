@@ -22,7 +22,7 @@ print(f"Using device: {device}")
 
 print(f"Using device: {device}")
 
-df = pd.read_csv('output_dirAAA/all_books_processed_data.csv')
+df = pd.read_csv('output_dir/all_books_processed_data.csv')
 
 # Format the input as "{chunk_of_text} : quote in text {specific_quote}"
 df['formatted_input'] = df['chunk_of_text'] + " : quote in text " + df['specific_quote']
