@@ -84,5 +84,5 @@ def process_books(input_folder):
     print(f"Combined data written to {giant_csv_path}")
 
 if __name__ == "__main__":
-    input_folder = "/content/input_dir"  # Change to your folder path
+    input_folder = "books"  # Change to your folder path
     process_books(input_folder)
