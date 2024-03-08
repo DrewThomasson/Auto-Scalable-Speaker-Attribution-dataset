@@ -26,7 +26,7 @@ def process_files(quotes_file, tokens_file, entities_file):
     df_quotes = pd.read_csv(quotes_file, delimiter="\t")
     df_tokens = pd.read_csv(tokens_file, delimiter="\t", on_bad_lines='skip', quoting=3)
     df_entities = pd.read_csv(entities_file, delimiter="\t")
-    
+
     for index, row in df_quotes.iterrows():
         quote_start = row['quote_start']
         quote_end = row['quote_end']
@@ -37,15 +37,18 @@ def process_files(quotes_file, tokens_file, entities_file):
         chunk_start = max(0, quote_start - 200)
         chunk_end = quote_end + 200
 
-        filtered_chunk = df_tokens[(df_tokens['token_ID_within_document'] >= chunk_start) & 
+        filtered_chunk = df_tokens[(df_tokens['token_ID_within_document'] >= chunk_start) &
                                    (df_tokens['token_ID_within_document'] <= chunk_end)]
-        
+
         text_chunk = ' '.join([str(token_row['word']) for _, token_row in filtered_chunk.iterrows()])
         text_chunk = text_chunk.replace(" n't", "n't").replace(" n’", "n’").replace(" ’", "’").replace(" ,", ",").replace(" .", ".").replace(" n’t", "n’t")
         text_chunk = re.sub(r' (?=[^a-zA-Z0-9\s])', '', text_chunk)
 
-        # Append to the global list
-        all_books_data.append({"Chunk of Text": text_chunk, "Quote": row['quote'], "Entity Who Said Quote": speaker_name})
+        all_books_data.append({
+            "chunk_of_text": text_chunk,
+            "specific_quote": row['quote'],
+            "entity_who_said_quote": speaker_name
+        })
 
 def process_books(input_folder):
     model_params = {
@@ -64,22 +67,22 @@ def process_books(input_folder):
             book_id = file_name.split('.')[0]
             output_directory = f"output_dir/{book_id}/"
             os.makedirs(output_directory, exist_ok=True)
-            
+
             print(f"Processing {file_name}...")
             booknlp.process(input_file, output_directory, book_id)
 
             quotes_file = f"{output_directory}{book_id}.quotes"
             tokens_file = f"{output_directory}{book_id}.tokens"
             entities_file = f"{output_directory}{book_id}.entities"
-            
+
             process_files(quotes_file, tokens_file, entities_file)
 
-    # After processing all books, generate the giant CSV
+    # Generate the combined CSV with specified column names
     giant_csv_path = "output_dir/all_books_processed_data.csv"
     df_all_books = pd.DataFrame(all_books_data)
     df_all_books.to_csv(giant_csv_path, index=False)
     print(f"Combined data written to {giant_csv_path}")
 
 if __name__ == "__main__":
-    input_folder = "input_books"  # Adjust to your folder path
+    input_folder = "/content/input_dir"  # Change to your folder path
     process_books(input_folder)
