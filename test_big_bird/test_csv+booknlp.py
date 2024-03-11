@@ -8,8 +8,44 @@ import os
 import nltk
 import re
 import subprocess
+import csv
 
+def process_large_numbers_in_directory(directory):
+    """
+    Processes all TXT files in the given directory, removing commas from large numbers.
 
+    Args:
+    directory (str): The path to the directory containing the TXT files.
+    """
+
+    def process_large_numbers_in_txt(file_path):
+        """
+        Removes commas from large numbers in the specified TXT file.
+
+        Args:
+        file_path (str): The path to the TXT file to process.
+        """
+        with open(file_path, 'r', encoding='utf-8') as file:
+            content = file.read()
+
+        # Regular expression to match numbers with commas
+        pattern = r'\b\d{1,3}(,\d{3})+\b'
+
+        # Remove commas in numerical sequences
+        modified_content = re.sub(pattern, lambda m: m.group().replace(',', ''), content)
+
+        with open(file_path, 'w', encoding='utf-8') as file:
+            file.write(modified_content)
+
+    # Iterate over all files in the given directory
+    for filename in os.listdir(directory):
+        if filename.lower().endswith('.txt'):
+            file_path = os.path.join(directory, filename)
+            process_large_numbers_in_txt(file_path)
+            print(f"Processed large numbers in: {filename}")
+
+# Example usage:
+# process_large_numbers_in_directory("/path/to/your/directory")
 
 
 
@@ -61,9 +97,17 @@ def clean_text(text):
 
 def process_files(quotes_file, entities_file, tokens_file, IncludeUnknownNames=True):
     # Load the files
-    df_quotes = pd.read_csv(quotes_file, delimiter="\t")
-    df_entities = pd.read_csv(entities_file, delimiter="\t")
-    df_tokens = pd.read_csv(tokens_file, delimiter="\t")
+    #df_quotes = pd.read_csv(quotes_file, delimiter="\t")
+    #df_entities = pd.read_csv(entities_file, delimiter="\t")
+    #df_tokens = pd.read_csv(tokens_file, delimiter="\t")
+
+    #This should fix any bad line errors by making it just skip any bad lines
+    try:
+        df_quotes = pd.read_csv(quotes_file, delimiter="\t", quoting=csv.QUOTE_NONE, error_bad_lines=False)
+        df_entities = pd.read_csv(entities_file, delimiter="\t", quoting=csv.QUOTE_NONE, error_bad_lines=False)
+        df_tokens = pd.read_csv(tokens_file, delimiter="\t", quoting=csv.QUOTE_NONE, error_bad_lines=False)
+    except pd.errors.ParserError as e:
+        print(f"Error reading one of the files: {e}")
 
     character_info = {}
 
@@ -213,6 +257,7 @@ def main():
     input_dir = 'books'
     output_base_dir = 'new_output_dir'
     convert_and_cleanup_ebooks(input_dir)
+    process_large_numbers_in_directory(input_dir)
     process_all_books(input_dir, output_base_dir, include_unknown_names=False)
 
 if __name__ == "__main__":
