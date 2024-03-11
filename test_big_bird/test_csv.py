@@ -4,6 +4,12 @@ import glob
 import os
 import nltk
 
+def clean_text(text):
+    # Apply text corrections
+    corrected_text = text.replace(" n't", "n't").replace(" n’", "n’").replace("( ", "(").replace(" ,", ",").replace("gon na", "gonna").replace(" n’t", "n’t")
+    corrected_text = re.sub(r' (?=[^a-zA-Z0-9\s])', '', corrected_text)
+    return corrected_text
+
 def process_files(quotes_file, entities_file, tokens_file, IncludeUnknownNames=True):
     # Load the files
     df_quotes = pd.read_csv(quotes_file, delimiter="\t")
@@ -70,20 +76,14 @@ def process_files(quotes_file, entities_file, tokens_file, IncludeUnknownNames=T
         info["most_likely_name"] = most_likely_name
         info["gender"] = gender
 
-    # Extracting and correcting text surrounding quotes
     def extract_surrounding_text(quote_start, quote_end, buffer=200):
         start_index = max(0, quote_start - buffer)
         end_index = quote_end + buffer
         surrounding_tokens = df_tokens[(df_tokens['token_ID_within_document'] >= start_index) & (df_tokens['token_ID_within_document'] <= end_index)]
-        
-        # Generating the words chunk with corrections
         words_chunk = ' '.join([str(token_row['word']) for index, token_row in surrounding_tokens.iterrows()])
-        words_chunk = words_chunk.replace(" n't", "n't").replace(" n’", "n’").replace("( ", "(").replace(" ,", ",").replace("gon na", "gonna").replace(" n’t", "n’t")
-        words_chunk = re.sub(r' (?=[^a-zA-Z0-9\s])', '', words_chunk)
-        
-        return words_chunk
+        return clean_text(words_chunk)
 
-    # Write the formatted data to quotes_modified.csv, now with an option to exclude unknown names
+    # Write the formatted data to quotes_modified.csv, including text cleanup
     output_filename = os.path.join(os.path.dirname(quotes_file), "quotes_modified.csv")
     with open(output_filename, 'w', newline='') as outfile:
         fieldnames = ["Text", "Start Location", "End Location", "Is Quote", "Speaker", "Text Quote Is Contained In", "Entity Name"]
@@ -101,25 +101,25 @@ def process_files(quotes_file, entities_file, tokens_file, IncludeUnknownNames=T
                 entity_name = "Narrator"
             else:
                 formatted_speaker = character_info[char_id]["formatted_speaker"] if char_id in character_info else "Unknown"
-                # Extract the entity name from the formatted speaker string
-                entity_name_parts = formatted_speaker.split(":")  # Splitting by ':'
+                entity_name_parts = formatted_speaker.split(":")
                 if len(entity_name_parts) > 1:
-                    entity_name = entity_name_parts[1].split(".")[0]  # Splitting by '.' and taking the name part
+                    entity_name = entity_name_parts[1].split(".")[0]
                 else:
                     entity_name = "Unknown"
 
             if not IncludeUnknownNames and entity_name == "Unknown":
-                continue  # Skip this row if excluding unknown names
+                continue
 
+            clean_quote_text = clean_text(row['quote'])
             surrounding_text = extract_surrounding_text(row['quote_start'], row['quote_end'])
 
             new_row = {
-                "Text": row['quote'], 
-                "Start Location": row['quote_start'], 
-                "End Location": row['quote_end'], 
-                "Is Quote": "True", 
-                "Speaker": formatted_speaker, 
-                "Text Quote Is Contained In": surrounding_text, 
+                "Text": clean_quote_text,
+                "Start Location": row['quote_start'],
+                "End Location": row['quote_end'],
+                "Is Quote": "True",
+                "Speaker": formatted_speaker,
+                "Text Quote Is Contained In": surrounding_text,
                 "Entity Name": entity_name
             }
             new_row_df = pd.DataFrame([new_row])
@@ -128,16 +128,11 @@ def process_files(quotes_file, entities_file, tokens_file, IncludeUnknownNames=T
         writer.to_csv(output_filename, index=False)
         print(f"Saved quotes_modified.csv to {output_filename}")
 
-
-
-
 def main():
-    # Use glob to get all .quotes and .entities files within the "Working_files" directory and its subdirectories
     quotes_files = glob.glob('*.quotes', recursive=True)
     entities_files = glob.glob('*.entities', recursive=True)
     tokens_files = glob.glob('*.tokens', recursive=True)
 
-    # Pair and process .quotes, .entities, and .tokens files with matching filenames (excluding the extension)
     for q_file in quotes_files:
         base_name = os.path.splitext(os.path.basename(q_file))[0]
         matching_entities_files = [e_file for e_file in entities_files if os.path.splitext(os.path.basename(e_file))[0] == base_name]
