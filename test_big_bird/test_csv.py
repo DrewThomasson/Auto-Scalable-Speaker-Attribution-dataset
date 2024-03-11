@@ -83,10 +83,10 @@ def process_files(quotes_file, entities_file, tokens_file, IncludeUnknownNames=T
         
         return words_chunk
 
-    # Write the formatted data to quotes.csv, modified to include surrounding text
+    # Write the formatted data to quotes.csv, modified to include surrounding text and entity name
     output_filename = os.path.join(os.path.dirname(quotes_file), "quotes_modified.csv")
     with open(output_filename, 'w', newline='') as outfile:
-        fieldnames = ["Text", "Start Location", "End Location", "Is Quote", "Speaker", "Text Quote Is Contained In"]
+        fieldnames = ["Text", "Start Location", "End Location", "Is Quote", "Speaker", "Text Quote Is Contained In", "Entity Name"]
         writer = pd.DataFrame(columns=fieldnames)
 
         for index, row in df_quotes.iterrows():
@@ -98,17 +98,33 @@ def process_files(quotes_file, entities_file, tokens_file, IncludeUnknownNames=T
 
             if character_info[char_id]["quote_count"] == 1:
                 formatted_speaker = "Narrator"
+                entity_name = "Narrator"
             else:
                 formatted_speaker = character_info[char_id]["formatted_speaker"] if char_id in character_info else "Unknown"
-            
+                # Extract the entity name from the formatted speaker string
+                entity_name_parts = formatted_speaker.split(":")  # Splitting by ':'
+                if len(entity_name_parts) > 1:
+                    entity_name = entity_name_parts[1].split(".")[0]  # Splitting by '.' and taking the name part
+                else:
+                    entity_name = "Unknown"
+
             surrounding_text = extract_surrounding_text(row['quote_start'], row['quote_end'])
 
-            new_row = {"Text": row['quote'], "Start Location": row['quote_start'], "End Location": row['quote_end'], "Is Quote": "True", "Speaker": formatted_speaker, "Text Quote Is Contained In": surrounding_text}
+            new_row = {
+                "Text": row['quote'], 
+                "Start Location": row['quote_start'], 
+                "End Location": row['quote_end'], 
+                "Is Quote": "True", 
+                "Speaker": formatted_speaker, 
+                "Text Quote Is Contained In": surrounding_text, 
+                "Entity Name": entity_name
+            }
             new_row_df = pd.DataFrame([new_row])
             writer = pd.concat([writer, new_row_df], ignore_index=True)
 
         writer.to_csv(output_filename, index=False)
         print(f"Saved quotes_modified.csv to {output_filename}")
+
 
 def main():
     # Use glob to get all .quotes and .entities files within the "Working_files" directory and its subdirectories
