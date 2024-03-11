@@ -4,7 +4,7 @@ import glob
 import os
 import nltk
 
-def process_files(quotes_file, entities_file, tokens_file):
+def process_files(quotes_file, entities_file, tokens_file, IncludeUnknownNames=True):
     # Load the files
     df_quotes = pd.read_csv(quotes_file, delimiter="\t")
     df_entities = pd.read_csv(entities_file, delimiter="\t")
@@ -70,13 +70,18 @@ def process_files(quotes_file, entities_file, tokens_file):
         info["most_likely_name"] = most_likely_name
         info["gender"] = gender
 
-    # Extracting text surrounding quotes
+    # Extracting and correcting text surrounding quotes
     def extract_surrounding_text(quote_start, quote_end, buffer=200):
         start_index = max(0, quote_start - buffer)
         end_index = quote_end + buffer
         surrounding_tokens = df_tokens[(df_tokens['token_ID_within_document'] >= start_index) & (df_tokens['token_ID_within_document'] <= end_index)]
-        surrounding_text = ' '.join(surrounding_tokens['word'].tolist())
-        return surrounding_text
+        
+        # Generating the words chunk with corrections
+        words_chunk = ' '.join([str(token_row['word']) for index, token_row in surrounding_tokens.iterrows()])
+        words_chunk = words_chunk.replace(" n't", "n't").replace(" n’", "n’").replace("( ", "(").replace(" ,", ",").replace("gon na", "gonna").replace(" n’t", "n’t")
+        words_chunk = re.sub(r' (?=[^a-zA-Z0-9\s])', '', words_chunk)
+        
+        return words_chunk
 
     # Write the formatted data to quotes.csv, modified to include surrounding text
     output_filename = os.path.join(os.path.dirname(quotes_file), "quotes_modified.csv")
@@ -118,7 +123,7 @@ def main():
         matching_tokens_files = [t_file for t_file in tokens_files if os.path.splitext(os.path.basename(t_file))[0] == base_name]
 
         if matching_entities_files and matching_tokens_files:
-            process_files(q_file, matching_entities_files[0], matching_tokens_files[0])
+            process_files(q_file, matching_entities_files[0], matching_tokens_files[0], IncludeUnknownNames=False)
 
     print("All processing complete!")
 
