@@ -83,7 +83,7 @@ def process_files(quotes_file, entities_file, tokens_file, IncludeUnknownNames=T
         
         return words_chunk
 
-    # Write the formatted data to quotes.csv, modified to include surrounding text and entity name
+    # Write the formatted data to quotes_modified.csv, now with an option to exclude unknown names
     output_filename = os.path.join(os.path.dirname(quotes_file), "quotes_modified.csv")
     with open(output_filename, 'w', newline='') as outfile:
         fieldnames = ["Text", "Start Location", "End Location", "Is Quote", "Speaker", "Text Quote Is Contained In", "Entity Name"]
@@ -108,6 +108,9 @@ def process_files(quotes_file, entities_file, tokens_file, IncludeUnknownNames=T
                 else:
                     entity_name = "Unknown"
 
+            if not IncludeUnknownNames and entity_name == "Unknown":
+                continue  # Skip this row if excluding unknown names
+
             surrounding_text = extract_surrounding_text(row['quote_start'], row['quote_end'])
 
             new_row = {
@@ -124,6 +127,8 @@ def process_files(quotes_file, entities_file, tokens_file, IncludeUnknownNames=T
 
         writer.to_csv(output_filename, index=False)
         print(f"Saved quotes_modified.csv to {output_filename}")
+
+
 
 
 def main():
