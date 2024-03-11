@@ -1,4 +1,3 @@
-#This is the code to train the big bird model on the dataset
 import pandas as pd
 import numpy as np
 import torch
@@ -9,8 +8,6 @@ from sklearn.metrics import accuracy_score
 from torch.utils.data import Dataset, DataLoader
 
 # Set device to GPU if available, else CPU
-import torch
-
 if torch.cuda.is_available():
     print("CUDA is available. Using GPU.")
     device = torch.device("cuda")
@@ -20,15 +17,13 @@ else:
 
 print(f"Using device: {device}")
 
-print(f"Using device: {device}")
+df = pd.read_csv('new_output_dir/combined_books.csv')
 
-df = pd.read_csv('output_dir/all_books_processed_data.csv')
-
-# Format the input as "{chunk_of_text} : quote in text {specific_quote}"
-df['formatted_input'] = df['chunk_of_text'] + " : quote in text " + df['specific_quote']
+# Adjusting column names in the DataFrame
+df['formatted_input'] = df['Text Quote Is Contained In'] + " : quote in text " + df['Text']
 
 label_encoder = LabelEncoder()
-df['entity_who_said_quote_encoded'] = label_encoder.fit_transform(df['entity_who_said_quote'])
+df['entity_name_encoded'] = label_encoder.fit_transform(df['Entity Name'])
 
 train_df, val_df = train_test_split(df, test_size=0.1)
 
@@ -49,14 +44,15 @@ class QuotationDataset(Dataset):
 
     def __getitem__(self, idx):
         item = {key: torch.tensor(val[idx]) for key, val in self.encodings.items()}
-        item['labels'] = torch.tensor(self.labels[idx])
+        # Ensure labels are of type torch.long for classification tasks
+        item['labels'] = torch.tensor(self.labels[idx], dtype=torch.long)  # Adjust dtype for classification
         return item
 
     def __len__(self):
         return len(self.labels)
 
-train_dataset = QuotationDataset(train_encodings, train_df['entity_who_said_quote_encoded'].values)
-val_dataset = QuotationDataset(val_encodings, val_df['entity_who_said_quote_encoded'].values)
+train_dataset = QuotationDataset(train_encodings, train_df['entity_name_encoded'].values)
+val_dataset = QuotationDataset(val_encodings, val_df['entity_name_encoded'].values)
 
 model = BigBirdForSequenceClassification.from_pretrained('google/bigbird-roberta-base', num_labels=len(label_encoder.classes_)).to(device)
 
@@ -64,32 +60,20 @@ def compute_metrics(p):
     predictions, labels = p
     predictions = np.argmax(predictions, axis=1)
     return {'accuracy': accuracy_score(labels, predictions)}
-if device.type == "cuda":
-    training_args = TrainingArguments(
-        output_dir='./results',
-        num_train_epochs=3,
-        per_device_train_batch_size=8,
-        per_device_eval_batch_size=16,
-        fp16=True,  # Enable mixed precision only on CUDA devices
-        warmup_steps=500,
-        weight_decay=0.01,
-        logging_dir='./logs',
-        logging_steps=10,
-        evaluation_strategy="epoch"
-    )
-else:
-    training_args = TrainingArguments(
-        output_dir='./results',
-        num_train_epochs=3,
-        per_device_train_batch_size=8,
-        per_device_eval_batch_size=16,
-        warmup_steps=500,
-        weight_decay=0.01,
-        logging_dir='./logs',
-        logging_steps=10,
-        evaluation_strategy="epoch"
-    )
 
+training_args = TrainingArguments(
+    output_dir='./results',
+    num_train_epochs=3,
+    per_device_train_batch_size=8,
+    per_device_eval_batch_size=16,
+    fp16=torch.cuda.is_available(),  # Enable mixed precision if on CUDA
+    warmup_steps=500,
+    weight_decay=0.01,
+    logging_dir='./logs',
+    logging_steps=10,
+    evaluation_strategy="epoch",
+    report_to="none"  # Disabling wandb integration
+)
 
 trainer = Trainer(
     model=model,
