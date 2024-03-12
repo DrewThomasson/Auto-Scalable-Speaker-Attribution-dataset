@@ -241,20 +241,31 @@ def process_all_books(input_dir, output_base_dir, include_unknown_names=True):
         
         # Check if the book has already been processed
         required_files = [f"{book_id}.quotes", f"{book_id}.entities", f"{book_id}.tokens"]
-        if os.path.exists(output_directory) and all(os.path.exists(os.path.join(output_directory, f)) for f in required_files):
-            print(f"Skipping already processed book: {book_id}")
-            continue
+        if not os.path.exists(output_directory) and all(os.path.exists(os.path.join(output_directory, f)) for f in required_files):
 
-        os.makedirs(output_directory, exist_ok=True)
-        process_book_with_booknlp(book_file, output_directory, book_id)
+            print(f"Processing with booknlp: {book_id}"
+            os.makedirs(output_directory, exist_ok=True)
+            process_book_with_booknlp(book_file, output_directory, book_id)
 
-        quotes_file = os.path.join(output_directory, f"{book_id}.quotes")
-        entities_file = os.path.join(output_directory, f"{book_id}.entities")
-        tokens_file = os.path.join(output_directory, f"{book_id}.tokens")
-        
-        if os.path.exists(quotes_file) and os.path.exists(entities_file) and os.path.exists(tokens_file):
-            df = process_files(quotes_file, entities_file, tokens_file, IncludeUnknownNames=include_unknown_names)
-            combined_df = pd.concat([combined_df, df], ignore_index=True)
+            print(f"Extracting data from: {book_id}")
+            quotes_file = os.path.join(output_directory, f"{book_id}.quotes")
+            entities_file = os.path.join(output_directory, f"{book_id}.entities")
+            tokens_file = os.path.join(output_directory, f"{book_id}.tokens")
+            
+            if os.path.exists(quotes_file) and os.path.exists(entities_file) and os.path.exists(tokens_file):
+                df = process_files(quotes_file, entities_file, tokens_file, IncludeUnknownNames=include_unknown_names)
+                combined_df = pd.concat([combined_df, df], ignore_index=True)
+        else:
+            print(f"Already processed with booknlp skipping: {book_id}")
+            print(f"Extracting data from: {book_id}")
+            quotes_file = os.path.join(output_directory, f"{book_id}.quotes")
+            entities_file = os.path.join(output_directory, f"{book_id}.entities")
+            tokens_file = os.path.join(output_directory, f"{book_id}.tokens")
+            
+            if os.path.exists(quotes_file) and os.path.exists(entities_file) and os.path.exists(tokens_file):
+                df = process_files(quotes_file, entities_file, tokens_file, IncludeUnknownNames=include_unknown_names)
+                combined_df = pd.concat([combined_df, df], ignore_index=True)
+
 
     combined_csv_path = os.path.join(output_base_dir, "combined_books.csv")
     if not combined_df.empty:
@@ -267,6 +278,7 @@ def main():
     convert_and_cleanup_ebooks(input_dir)
     process_large_numbers_in_directory(input_dir)
     process_all_books(input_dir, output_base_dir, include_unknown_names=False)
+    print("Complete!")
 
 if __name__ == "__main__":
     main()
