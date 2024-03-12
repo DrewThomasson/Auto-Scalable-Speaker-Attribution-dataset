@@ -1,5 +1,27 @@
 
 
+import pandas as pd
+from sklearn.utils import shuffle
+from tqdm import tqdm
+import time
+
+def shuffle_csv_in_place(csv_file):
+    print("Reading CSV file...")
+    df = pd.read_csv(csv_file)
+    
+    print("Shuffling rows...")
+    # Introducing a loading bar simulation for the shuffling process
+    for _ in tqdm(range(100), desc="Shuffling"):
+        time.sleep(0.01)  # Simulate time delay for large files
+    shuffled_df = shuffle(df)
+    
+    print("Writing shuffled data back to the original file...")
+    shuffled_df.to_csv(csv_file, index=False)
+    
+    print(f"File '{csv_file}' has been shuffled and updated.")
+
+
+
 
 from booknlp.booknlp import BookNLP
 import pandas as pd
@@ -243,7 +265,7 @@ def process_all_books(input_dir, output_base_dir, include_unknown_names=True):
         required_files = [f"{book_id}.quotes", f"{book_id}.entities", f"{book_id}.tokens"]
         if not os.path.exists(output_directory) and all(os.path.exists(os.path.join(output_directory, f)) for f in required_files):
 
-            print(f"Processing with booknlp: {book_id}"
+            print(f"Processing with booknlp: {book_id}")
             os.makedirs(output_directory, exist_ok=True)
             process_book_with_booknlp(book_file, output_directory, book_id)
 
@@ -278,6 +300,7 @@ def main():
     convert_and_cleanup_ebooks(input_dir)
     process_large_numbers_in_directory(input_dir)
     process_all_books(input_dir, output_base_dir, include_unknown_names=False)
+    shuffle_csv_in_place("new_output_dir/combined_books.csv")
     print("Complete!")
 
 if __name__ == "__main__":
