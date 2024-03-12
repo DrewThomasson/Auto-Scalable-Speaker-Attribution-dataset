@@ -263,12 +263,9 @@ def process_all_books(input_dir, output_base_dir, include_unknown_names=True):
         
         # Check if the book has already been processed
         required_files = [f"{book_id}.quotes", f"{book_id}.entities", f"{book_id}.tokens"]
-        if not os.path.exists(output_directory) and all(os.path.exists(os.path.join(output_directory, f)) for f in required_files):
+        if os.path.exists(output_directory) and all(os.path.exists(os.path.join(output_directory, f)) for f in required_files):
 
-            print(f"Processing with booknlp: {book_id}")
-            os.makedirs(output_directory, exist_ok=True)
-            process_book_with_booknlp(book_file, output_directory, book_id)
-
+            print(f"Already processed with booknlp skipping: {book_id}")
             print(f"Extracting data from: {book_id}")
             quotes_file = os.path.join(output_directory, f"{book_id}.quotes")
             entities_file = os.path.join(output_directory, f"{book_id}.entities")
@@ -278,7 +275,10 @@ def process_all_books(input_dir, output_base_dir, include_unknown_names=True):
                 df = process_files(quotes_file, entities_file, tokens_file, IncludeUnknownNames=include_unknown_names)
                 combined_df = pd.concat([combined_df, df], ignore_index=True)
         else:
-            print(f"Already processed with booknlp skipping: {book_id}")
+            print(f"Processing with booknlp: {book_id}")
+            os.makedirs(output_directory, exist_ok=True)
+            process_book_with_booknlp(book_file, output_directory, book_id)
+
             print(f"Extracting data from: {book_id}")
             quotes_file = os.path.join(output_directory, f"{book_id}.quotes")
             entities_file = os.path.join(output_directory, f"{book_id}.entities")
@@ -375,17 +375,20 @@ def compute_metrics(p):
 
 # Training arguments to customize the training process
 training_args = TrainingArguments(
-    output_dir='./results',
-    num_train_epochs=3,
-    per_device_train_batch_size=8,
-    per_device_eval_batch_size=16,
-    fp16=torch.cuda.is_available(),  # Enable mixed precision if CUDA is available
-    warmup_steps=500,
-    weight_decay=0.01,
-    logging_dir='./logs',
-    logging_steps=10,
-    evaluation_strategy="epoch",
-    report_to="none"  # Disabling wandb integration
+    output_dir='./results',  # Where to store the training outputs.
+    num_train_epochs=3,  # Total number of training epochs.
+    per_device_train_batch_size=8,  # Batch size for training.
+    per_device_eval_batch_size=16,  # Batch size for evaluation.
+    evaluation_strategy="steps",  # Evaluate every `eval_steps`.
+    eval_steps=100,  # Number of steps to run evaluation.
+    save_strategy="steps",  # Align saving with evaluation strategy.
+    save_steps=5000,  # Save the model every 100 steps, align with eval for convenience.
+    fp16=torch.cuda.is_available(),  # Use mixed precision if available.
+    warmup_steps=500,  # Number of warmup steps for learning rate scheduler.
+    weight_decay=0.01,  # Weight decay for optimization.
+    logging_dir='./logs',  # Directory for storing logs.
+    logging_steps=10,  # Log metrics every 10 steps.
+    report_to="none"  # Disable reporting to external services.
 )
 
 # Initialize the Trainer with the model, training arguments, datasets, and compute_metrics function
