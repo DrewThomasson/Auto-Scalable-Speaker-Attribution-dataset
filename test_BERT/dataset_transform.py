@@ -1,54 +1,40 @@
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 
-def create_and_analyze_limited_dataset(input_csv, output_csv, min_occurrences=2, max_occurrences=50):
+def adjust_and_clean_dataset(input_csv, output_csv):
     # Load the original CSV file
     df = pd.read_csv(input_csv)
     
-    # Filter entities with at least min_occurrences occurrences
-    filtered_df = df.groupby('Entity Name').filter(lambda x: len(x) >= min_occurrences)
+    # Calculate the average number of occurrences per unique entity
+    avg_occurrences = int(df['Entity Name'].value_counts().mean())
     
-    # Limit to max_occurrences for each entity
-    limited_df = filtered_df.groupby('Entity Name').head(max_occurrences)
+    # Limit to avg_occurrences for each entity
+    limited_df = df.groupby('Entity Name').head(avg_occurrences)
     
-    # Save the limited DataFrame to a new CSV file
-    limited_df.to_csv(output_csv, index=False)
-    print(f"Modified dataset saved to {output_csv}")
-
-    # Analyze the modified dataset
-    # Calculate the frequency of each unique value in the "Entity Name" column
+    # Calculate the occurrences again to find outliers
     entity_counts = limited_df['Entity Name'].value_counts()
-
-    # Basic statistics
-    print(f"Basic Statistics:\n{entity_counts.describe()}\n")
     
-    # Histogram of entity occurrences
-    plt.figure(figsize=(10, 6))
-    sns.histplot(entity_counts, bins=30, kde=True)
-    plt.title('Distribution of Entity Occurrences')
-    plt.xlabel('Number of Occurrences')
-    plt.ylabel('Frequency')
-    plt.show()
+    # Compute Q1, Q3, and IQR for the limited dataset
+    Q1 = entity_counts.quantile(0.25)
+    Q3 = entity_counts.quantile(0.75)
+    IQR = Q3 - Q1
     
-    # Boxplot for outlier identification
-    plt.figure(figsize=(10, 6))
-    sns.boxplot(x=entity_counts)
-    plt.title('Boxplot of Entity Occurrences')
-    plt.xlabel('Entity Occurrences')
-    plt.show()
+    # Define bounds for outliers
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
     
-    # Outliers
-    q1 = entity_counts.quantile(0.25)
-    q3 = entity_counts.quantile(0.75)
-    iqr = q3 - q1
-    outlier_threshold_high = q3 + 1.5 * iqr
-    outliers = entity_counts[entity_counts > outlier_threshold_high]
-    print(f"Outliers (if any):\n{outliers}")
+    # Identify entities within the acceptable range (non-outliers)
+    acceptable_entities = entity_counts[(entity_counts >= lower_bound) & (entity_counts <= upper_bound)].index
+    
+    # Keep only rows for acceptable entities
+    final_df = limited_df[limited_df['Entity Name'].isin(acceptable_entities)]
+    
+    # Save the final DataFrame to a new CSV file
+    final_df.to_csv(output_csv, index=False)
+    print(f"Final dataset saved to {output_csv}. It includes entities limited to the average number of occurrences and without outliers.")
 
 # Specify your input and output CSV file paths
-input_csv_path = 'combined_books.csv'
-output_csv_path = 'averaged_combined_books.csv'
+input_csv_path = 'your_input_file.csv'
+output_csv_path = 'final_dataset.csv'
 
-# Create the modified dataset and analyze it
-create_and_analyze_limited_dataset(input_csv_path, output_csv_path)
+# Adjust the dataset and save the cleaned version
+adjust_and_clean_dataset(input_csv_path, output_csv_path)
