@@ -259,12 +259,9 @@ def process_all_books(input_dir, output_base_dir, include_unknown_names=True):
         
         # Check if the book has already been processed
         required_files = [f"{book_id}.quotes", f"{book_id}.entities", f"{book_id}.tokens"]
-        if not os.path.exists(output_directory) and all(os.path.exists(os.path.join(output_directory, f)) for f in required_files):
+        if os.path.exists(output_directory) and all(os.path.exists(os.path.join(output_directory, f)) for f in required_files):
 
-            print(f"Processing with booknlp: {book_id}")
-            os.makedirs(output_directory, exist_ok=True)
-            process_book_with_booknlp(book_file, output_directory, book_id)
-
+            print(f"Already processed with booknlp skipping: {book_id}")
             print(f"Extracting data from: {book_id}")
             quotes_file = os.path.join(output_directory, f"{book_id}.quotes")
             entities_file = os.path.join(output_directory, f"{book_id}.entities")
@@ -274,7 +271,10 @@ def process_all_books(input_dir, output_base_dir, include_unknown_names=True):
                 df = process_files(quotes_file, entities_file, tokens_file, IncludeUnknownNames=include_unknown_names)
                 combined_df = pd.concat([combined_df, df], ignore_index=True)
         else:
-            print(f"Already processed with booknlp skipping: {book_id}")
+            print(f"Processing with booknlp: {book_id}")
+            os.makedirs(output_directory, exist_ok=True)
+            process_book_with_booknlp(book_file, output_directory, book_id)
+
             print(f"Extracting data from: {book_id}")
             quotes_file = os.path.join(output_directory, f"{book_id}.quotes")
             entities_file = os.path.join(output_directory, f"{book_id}.entities")
