@@ -1,12 +1,35 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from tqdm import tqdm
+from tqdm.notebook import tqdm_notebook
+import numpy as np
+
+# Initialize tqdm for pandas operations
+tqdm.pandas()
 
 # Replace 'your_file.csv' with the path to your actual CSV file
 file_path = 'your_file.csv'
 
-# Read the CSV file
-df = pd.read_csv(file_path)
+# Define a function to read the CSV with a progress bar
+def read_csv_with_progress(csv_path):
+    # Get the number of lines in the CSV file
+    total_lines = sum(1 for _ in open(csv_path, 'r', encoding='utf-8'))
+    
+    # Create a tqdm iterator for pandas
+    tqdm_iterator = tqdm(total=total_lines, desc="Reading CSV")
+    
+    # Read the CSV file with the progress bar
+    df = pd.read_csv(csv_path, iterator=True, chunksize=1000)
+    df = pd.concat([chunk for chunk in df], ignore_index=True)
+    
+    # Close the tqdm iterator
+    tqdm_iterator.close()
+    
+    return df
+
+# Read the CSV file with progress bar
+df = read_csv_with_progress(file_path)
 
 # Calculate the frequency of each unique value in the "Entity Name" column
 entity_counts = df['Entity Name'].value_counts()
