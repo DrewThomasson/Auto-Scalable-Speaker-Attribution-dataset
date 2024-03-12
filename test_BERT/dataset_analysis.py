@@ -34,15 +34,19 @@ df = read_csv_with_progress(file_path)
 # Calculate the frequency of each unique value in the "Entity Name" column
 entity_counts = df['Entity Name'].value_counts()
 
+# Print the occurrences for each entity from most common to least common
+print("Occurrences for each entity (from most common to least common):")
+print(entity_counts)
+
 # Calculate the average occurrence of each entity
 average_occurrence = entity_counts.mean()
 
 # Identify outliers (for simplicity, here outliers are defined as entities with occurrences significantly higher or lower than average)
 outliers = entity_counts[entity_counts > average_occurrence * 1.5]
 
-# Visualize the distribution of entity occurrences
+# Visualize the distribution of entity occurrences for all unique values
 plt.figure(figsize=(10, 6))
-sns.histplot(entity_counts, bins=30, kde=True)
+sns.histplot(entity_counts, bins=min(30, len(entity_counts)), kde=True)
 plt.title('Distribution of Entity Occurrences')
 plt.xlabel('Number of Occurrences')
 plt.ylabel('Frequency')
