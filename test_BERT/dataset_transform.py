@@ -43,15 +43,18 @@ def compare_datasets(input_csv, output_csv):
     print("Original Dataset:\n", original_counts.describe())
     print("\nFinal Dataset:\n", final_counts.describe())
 
-def adjust_and_clean_dataset(input_csv, output_csv):
+def adjust_and_clean_dataset(input_csv, output_csv, min_occurrences=6):
     # Load the original CSV file
     df = pd.read_csv(input_csv)
     
-    # Calculate the average number of occurrences per unique entity
-    avg_occurrences = int(df['Entity Name'].value_counts().mean())
+    # Filter entities with more than min_occurrences
+    filtered_df = df.groupby('Entity Name').filter(lambda x: len(x) > min_occurrences)
+    
+    # Calculate the average number of occurrences per unique entity, excluding those with <= min_occurrences
+    avg_occurrences = int(filtered_df['Entity Name'].value_counts().mean())
     
     # Limit to avg_occurrences for each entity
-    limited_df = df.groupby('Entity Name').head(avg_occurrences)
+    limited_df = filtered_df.groupby('Entity Name').head(avg_occurrences)
     
     # Calculate the occurrences again to find outliers
     entity_counts = limited_df['Entity Name'].value_counts()
@@ -73,7 +76,7 @@ def adjust_and_clean_dataset(input_csv, output_csv):
     
     # Save the final DataFrame to a new CSV file
     final_df.to_csv(output_csv, index=False)
-    print(f"Final dataset saved to {output_csv}. It includes entities limited to the average number of occurrences and without outliers.")
+    print(f"Final dataset saved to {output_csv}. It includes entities limited to the average number of occurrences and without outliers, with a minimum of {min_occurrences} occurrences.")
 
     # Analyze and compare the datasets
     compare_datasets(input_csv, output_csv)
