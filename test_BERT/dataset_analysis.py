@@ -2,14 +2,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from tqdm import tqdm
-from tqdm.notebook import tqdm_notebook
 import numpy as np
 
 # Initialize tqdm for pandas operations
 tqdm.pandas()
 
 # Replace 'your_file.csv' with the path to your actual CSV file
-file_path = 'your_file.csv'
+file_path = 'combined_books.csv'
 
 # Define a function to read the CSV with a progress bar
 def read_csv_with_progress(csv_path):
@@ -34,9 +33,10 @@ df = read_csv_with_progress(file_path)
 # Calculate the frequency of each unique value in the "Entity Name" column
 entity_counts = df['Entity Name'].value_counts()
 
-# Print the occurrences for each entity from most common to least common
+# Print the occurrences for each entity from most common to least common without truncation
 print("Occurrences for each entity (from most common to least common):")
-print(entity_counts)
+for entity, count in entity_counts.items():
+    print(f"{entity}: {count}")
 
 # Calculate the average occurrence of each entity
 average_occurrence = entity_counts.mean()
