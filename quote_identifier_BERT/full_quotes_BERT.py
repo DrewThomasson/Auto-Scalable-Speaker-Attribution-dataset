@@ -156,6 +156,8 @@ split_sentences_and_expand_csv(input_file_path, output_file_path)
 
 
 import os
+import nltk
+nltk.download('averaged_perceptron_tagger')
 
 #This will convert every book in the books folder into a txt file
 
