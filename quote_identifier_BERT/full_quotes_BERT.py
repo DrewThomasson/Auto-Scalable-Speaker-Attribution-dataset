@@ -154,6 +154,72 @@ split_sentences_and_expand_csv(input_file_path, output_file_path)
 
 
 
+
+
+
+#This will convert every book in the books folder into a txt file
+
+def convert_and_cleanup_ebooks(directory):
+    """
+    Converts ebook files in the specified directory to TXT format using Calibre's ebook-convert,
+    and then removes any files that are not TXT files.
+
+    Args:
+    directory (str): The path to the directory containing the ebook files.
+    """
+    # Supported Calibre input formats for conversion (excluding TXT)
+    supported_formats = {
+        '.cbz', '.cbr', '.cbc', '.chm', '.epub', '.fb2', '.html',
+        '.lit', '.lrf', '.mobi', '.odt', '.pdf', '.prc', '.pdb',
+        '.pml', '.rb', '.rtf', '.snb', '.tcr'
+    }
+
+    # Convert files to TXT
+    for filename in os.listdir(directory):
+        filepath = os.path.join(directory, filename)
+        if os.path.isfile(filepath):
+            file_ext = os.path.splitext(filename)[1].lower()
+            # If the file is not a TXT and is a supported format, convert it
+            if file_ext in supported_formats:
+                txt_path = f"{os.path.splitext(filepath)[0]}.txt"
+                try:
+                    subprocess.run(['ebook-convert', filepath, txt_path], check=True)
+                    print(f"Converted {filepath} to TXT.")
+                except subprocess.CalledProcessError as e:
+                    print(f"Failed to convert {filepath}: {str(e)}")
+
+    # Remove files that are not TXT
+    for filename in os.listdir(directory):
+        filepath = os.path.join(directory, filename)
+        if os.path.isfile(filepath) and not filename.lower().endswith('.txt'):
+            os.remove(filepath)
+            print(f"Removed {filepath}.")
+
+# Example usage
+# convert_and_cleanup_ebooks("/path/to/your/directory")
+
+
+
+convert_and_cleanup_ebooks("books")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 from booknlp.booknlp import BookNLP
 import pandas as pd
 import glob
