@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/home/drew/Auto-Scalable-Speaker-Attribution-dataset/pipeline/new_train_quotation_attribution_BERT.py", line 850, in <module>
+    trainer.train()
+  File "/home/drew/miniconda/envs/VoxNovel/lib/python3.10/site-packages/transformers/trainer.py", line 1645, in train
+    return inner_training_loop(
+  File "/home/drew/miniconda/envs/VoxNovel/lib/python3.10/site-packages/transformers/trainer.py", line 1929, in _inner_training_loop
+    tr_loss_step = self.training_step(model, inputs)
+  File "/home/drew/miniconda/envs/VoxNovel/lib/python3.10/site-packages/transformers/trainer.py", line 2750, in training_step
+    loss = self.compute_loss(model, inputs)
+  File "/home/drew/miniconda/envs/VoxNovel/lib/python3.10/site-packages/transformers/trainer.py", line 2775, in compute_loss
+    outputs = model(**inputs)
+  File "/home/drew/miniconda/envs/VoxNovel/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1518, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/drew/miniconda/envs/VoxNovel/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1527, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/drew/miniconda/envs/VoxNovel/lib/python3.10/site-packages/transformers/models/gpt2/modeling_gpt2.py", line 1449, in forward
+    self.config.pad_token_id is not None or batch_size == 1
+AssertionError: Cannot handle batch sizes > 1 if no padding token is defined.
