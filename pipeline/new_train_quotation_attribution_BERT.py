@@ -939,6 +939,8 @@ for i in range(len(sample_dataset)):
 
 
 #this is the more even new way of training the distil-GPT-2 model on the books
+
+#this will make sure the input dataset only includes whats needed to train, and is formatted in a way to make it easier to retrive the outputs
 import pandas as pd
 from datasets import load_metric
 import numpy as np
