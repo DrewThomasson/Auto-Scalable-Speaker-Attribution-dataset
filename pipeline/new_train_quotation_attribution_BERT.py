@@ -307,7 +307,7 @@ def process_all_books(input_dir, output_base_dir, include_unknown_names=True):
         print(f"Combined CSV saved to {combined_csv_path}")
 
 def main():
-    input_dir = 'books_small'
+    input_dir = 'books'
     output_base_dir = 'new_output_dir'
     convert_and_cleanup_ebooks(input_dir)
     process_large_numbers_in_directory(input_dir)
