@@ -172,8 +172,9 @@ def extract_first_value(text, start_delim="<speaker>", end_delim="<end>"):
         return "No match found"
 
 
-
-for i in range(5):
+num_of_tests = 5
+correct_responces = 0
+for i in range(num_of_tests):
     # get random row values from dataframe 
     formatted_input, formatted_output = pd.read_csv("GPT-2_training_df.csv").sample(1)[["formatted_input", "formatted_output"]].values[0] 
     #print("INPUT")
@@ -189,7 +190,8 @@ for i in range(5):
     #print(output_string)
     #print("Extracting first answer from output...")
     #print("Generated answer")
-    print(extract_first_value(output_string))
+    extracted_gen_answer = extract_first_value(output_string)
+    print(extracted_gen_answer)
 
 
     #print the correct output
@@ -197,6 +199,12 @@ for i in range(5):
     formatted_output = formatted_output.replace('<end>', '')
     print(formatted_output)
 
+
+    #compare the correct output with the generated output
+    if extracted_gen_answer.replace(" ", "") == formatted_output.replace(" ", ""):
+        correct_responces = correct_responces +1
+        print("Correct!")
+print(f'Accuracy score of : {correct_responces/num_of_tests}')
 '''
 # Get the input string from the user
 input_string = input("Enter an input string: ")
