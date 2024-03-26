@@ -307,7 +307,7 @@ def process_all_books(input_dir, output_base_dir, include_unknown_names=True):
         print(f"Combined CSV saved to {combined_csv_path}")
 
 def main():
-    input_dir = 'books'
+    input_dir = 'books_small'
     output_base_dir = 'new_output_dir'
     convert_and_cleanup_ebooks(input_dir)
     process_large_numbers_in_directory(input_dir)
@@ -769,6 +769,29 @@ fromt eh dataframe
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
 #training code for Distil GPT-2 
 #chat it came from https://chat.openai.com/share/2a846c4a-0dca-46a6-9de9-8dbd629d39cd
 import pandas as pd
@@ -782,7 +805,10 @@ import numpy as np
 # Assuming df is your DataFrame
 # Make sure to load your DataFrame before this step
 df['formatted_input'] = df['Context'] + " ::: " + df['Text']
-df = df[['formatted_input', 'Speaker']]
+df = df[['formatted_input', 'Entity Name']]
+
+#save the df as csv file for testing idk
+df.to_csv('GPT-2_training_df.csv', index=False)
 
 # Load tokenizer and set pad token
 tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
@@ -790,7 +816,7 @@ tokenizer.pad_token = tokenizer.eos_token  # Set tokenizer's pad token
 
 # Encode the labels
 label_encoder = LabelEncoder()
-df['encoded_speaker'] = label_encoder.fit_transform(df['Speaker'])
+df['encoded_speaker'] = label_encoder.fit_transform(df['Entity Name'])
 
 # Split the data
 train_df, eval_df = train_test_split(df, test_size=0.1)
@@ -835,7 +861,7 @@ def compute_metrics(eval_pred):
 # Training arguments
 training_args = TrainingArguments(
     output_dir='./results',
-    num_train_epochs=3,
+    num_train_epochs=1,
     per_device_train_batch_size=4,
     per_device_eval_batch_size=4,
     warmup_steps=500,
@@ -855,4 +881,262 @@ trainer = Trainer(
 
 # Train the model
 trainer.train()
+
+
+#this should test the trained model at the end
+#hopefully this should work as infrence code lol
+
+import torch
+from transformers import GPT2Tokenizer, GPT2ForSequenceClassification
+
+# Load the trained model from the checkpoint
+model_path = "results/checkpoint-3500"
+model = GPT2ForSequenceClassification.from_pretrained(model_path)
+tokenizer = GPT2Tokenizer.from_pretrained('distilgpt2')
+
+# Select 5 rows from the DataFrame
+sample_df = df.sample(n=5)
+
+# Tokenize the inputs
+sample_inputs = tokenize_function(sample_df['formatted_input'].tolist())
+
+# Create a CustomDataset for the sample inputs
+sample_dataset = CustomDataset(sample_inputs, sample_df['encoded_speaker'].tolist())
+
+# Set the model to evaluation mode
+model.eval()
+
+# Iterate over the sample dataset
+for i in range(len(sample_dataset)):
+    item = sample_dataset[i]
+    input_ids = item['input_ids'].unsqueeze(0).to(model.device)
+    attention_mask = item['attention_mask'].unsqueeze(0).to(model.device)
+
+    with torch.no_grad():
+        outputs = model(input_ids, attention_mask=attention_mask)
+        logits = outputs.logits
+        predicted_label = torch.argmax(logits, dim=-1).item()
+
+    # Convert encoded labels back to original labels
+    predicted_speaker = label_encoder.inverse_transform([predicted_label])[0]
+    correct_speaker = label_encoder.inverse_transform([item['labels'].item()])[0]
+
+    print(f"Input {i+1}:")
+    print(sample_df['formatted_input'].iloc[i])
+    print(f"Predicted Speaker: {predicted_speaker}")
+    print(f"Correct Speaker: {correct_speaker}")
+    print("---")
+
+    
+
+
+
+
+
+
+'''
+
+
+
+#this is the more even new way of training the distil-GPT-2 model on the books
+import pandas as pd
+from datasets import load_metric
+import numpy as np
+# Assuming df is your DataFrame
+# Make sure to load your DataFrame before this step
+df['formatted_input'] = df['Context'] + " ::: " + df['Text'] + " <speaker>"
+df['Entity Name'] = df['Entity Name'] + "<end>"
+df = df[['formatted_input', 'Entity Name']]
+
+#save the df as csv file for testing idk
+df.to_csv('GPT-2_training_df.csv', index=False)
+
+
+
+
+
+
+#new training code for Distil-GPT-2
+
+
+import pandas as pd
+from datasets import Dataset
+import torch
+from transformers import GPT2LMHeadModel, GPT2Tokenizer, DataCollatorForLanguageModeling, Trainer, TrainingArguments
+
+# Load the CSV file into a DataFrame
+df = pd.read_csv("GPT-2_training_df.csv")
+
+# Create a Hugging Face Dataset from the DataFrame
+dataset = Dataset.from_pandas(df)
+
+# Filter out rows where either 'Input_string' or 'Output_string' is missing
+dataset = dataset.filter(lambda example: example['formatted_input'] is not None and example['Entity Name'] is not None)
+
+# Function to concatenate the input and output strings
+def concatenate_examples(examples):
+    return {'text': examples['formatted_input'] + " " + examples['Entity Name']}
+
+# Apply the function to the dataset
+dataset = dataset.map(concatenate_examples)
+
+# Load the pre-trained DistilGPT-2 model and tokenizer
+tokenizer = GPT2Tokenizer.from_pretrained("distilgpt2")
+model = GPT2LMHeadModel.from_pretrained("distilgpt2")
+
+# Explicitly set the tokenizer's pad token to the EOS token if it's not already set
+if tokenizer.pad_token is None:
+    tokenizer.pad_token = tokenizer.eos_token
+
+# Tokenize the text
+def tokenize_function(examples):
+    return tokenizer(examples["text"], padding="max_length", truncation=True, max_length=600)
+
+tokenized_dataset = dataset.map(tokenize_function, batched=True)
+
+# Set the format to PyTorch tensors
+tokenized_dataset.set_format(type='torch', columns=['input_ids', 'attention_mask'])
+
+# Define the training arguments
+training_args = TrainingArguments(
+    output_dir="./results",
+    overwrite_output_dir=True,
+    num_train_epochs=3,
+    per_device_train_batch_size=4,
+    save_steps=10000,
+    save_total_limit=1,
+)
+
+# Define the data collator
+data_collator = DataCollatorForLanguageModeling(
+    tokenizer=tokenizer, mlm=False
+)
+
+# Create the trainer
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    data_collator=data_collator,
+    train_dataset=tokenized_dataset,
+)
+
+# Train the model
+trainer.train()
+
+# Save the trained model and tokenizer to the "trained_model" folder
+model_save_path = "./trained_model"
+model.save_pretrained(model_save_path)
+tokenizer.save_pretrained(model_save_path)
+
+
+
+
+
+
+
+
+
+
+
+
+#this is the infrence code for the trained gpt-2 model
+
+from transformers import GPT2LMHeadModel, GPT2Tokenizer
+import pandas as pd
+
+# Load the trained model
+
+model_path = "./trained_model"
+model = GPT2LMHeadModel.from_pretrained(model_path)
+tokenizer = GPT2Tokenizer.from_pretrained(model_path)
+
+# Function to generate the model's output given an input string
+def generate_output(input_string):
+    inputs = tokenizer(input_string, return_tensors="pt", padding=True, truncation=True, max_length=1000)
+    input_ids = inputs['input_ids']
+    attention_mask = inputs['attention_mask']
+
+    output = model.generate(
+        input_ids,
+        max_length=1000,  # Further reduce max length if expecting shorter responses
+        num_return_sequences=1,
+        attention_mask=attention_mask,
+        pad_token_id=tokenizer.eos_token_id,
+        temperature=0.5,  # Adjust temperature for determinism
+        top_k=50,  # Tighten top_k
+        top_p=0.95,  # Slightly loosen top_p for a bit of variability
+        no_repeat_ngram_size=2,
+        early_stopping=True,
+    )
+
+    generated_output = tokenizer.decode(output[0], skip_special_tokens=True)
+    return generated_output
+
+
+
+import re
+
+def extract_first_value(text, start_delim="<speaker>", end_delim="<end>"):
+    # Create a regular expression pattern to find text between the delimiters
+    pattern = re.escape(start_delim) + "(.*?)" + re.escape(end_delim)
+    
+    # Search for the pattern in the text
+    match = re.search(pattern, text)
+    
+    # If a match is found, return the first group (the text between the delimiters)
+    if match:
+        return match.group(1)  # `group(1)` refers to the text captured by `(.*?)`
+    else:
+        return "No match found"
+
+
+num_of_tests = 5
+correct_responces = 0
+for i in range(num_of_tests):
+    # get random row values from dataframe 
+    formatted_input, formatted_output = pd.read_csv("GPT-2_training_df.csv").sample(1)[["formatted_input", 'Entity Name']].values[0] 
+    #print("INPUT")
+    #print(formatted_input)
+    #print("OUTPUT")
+    #print(formatted_output)
+
+    # Generate the model's output
+    output_string = generate_output(formatted_input)
+
+    # Print the generated output
+    print("Generated Output:")
+    #print(output_string)
+    #print("Extracting first answer from output...")
+    #print("Generated answer")
+    extracted_gen_answer = extract_first_value(output_string)
+    print(extracted_gen_answer)
+
+
+    #print the correct output
+    print("Correct output:")
+    formatted_output = formatted_output.replace('<end>', '')
+    print(formatted_output)
+
+
+    #compare the correct output with the generated output
+    if extracted_gen_answer.replace(" ", "") == formatted_output.replace(" ", ""):
+        correct_responces = correct_responces +1
+        print("Correct!")
+print(f'Accuracy score of : {correct_responces/num_of_tests}')
+'''
+# Get the input string from the user
+input_string = input("Enter an input string: ")
+
+# Generate the model's output
+output_string = generate_output(input_string)
+
+# Print the generated output
+print("Generated Output:")
+print(output_string)
+
+'''
+
+
+
+
 
