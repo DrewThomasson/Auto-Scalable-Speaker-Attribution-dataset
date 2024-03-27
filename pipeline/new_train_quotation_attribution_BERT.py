@@ -370,7 +370,7 @@ df = pd.read_csv('new_output_dir/combined_books.csv')  # Make sure to replace 'c
 
 # Step 2: Filter based on the "Entity Name" column
 entity_counts = df['Entity Name'].value_counts()
-filtered_entities = entity_counts[(entity_counts > 5) & (entity_counts < 47)].index
+filtered_entities = entity_counts[(entity_counts > 10) & (entity_counts < 47)].index
 filtered_df = df[df['Entity Name'].isin(filtered_entities)]
 
 # Step 3: Write the filtered DataFrame to a new CSV file
@@ -940,19 +940,95 @@ for i in range(len(sample_dataset)):
 
 #this is the more even new way of training the distil-GPT-2 model on the books
 
+
+
+#This will add a column which will hold a memory of the previous 40 names identified
+import pandas as pd
+import random
+
+def add_prev_entities_column(df):
+    # Ensure 'Entity Name' is of string type
+    df['Entity Name'] = df['Entity Name'].astype(str)
+    
+    # Initialize a list to keep track of all unique entity names in their appearance order
+    unique_entities = []
+    # List to hold the result strings for each row
+    result_strings = []
+    
+    for index, row in df.iterrows():
+        entity = row['Entity Name'].replace("<end>", "")
+        # If the entity is not in unique_entities, add it
+        if entity not in unique_entities:
+            unique_entities.append(entity)
+        
+        # Determine the number of unique previous entities to include
+        # It's important to do this within the loop after updating unique_entities
+        if unique_entities:
+            num_entities = random.randint(1, min(40, len(unique_entities)))
+            # Select the last num_entities from unique_entities for the current row
+            selected_entities = unique_entities[max(0, len(unique_entities)-num_entities):]
+        else:
+            selected_entities = []
+        
+        # Convert the list of entities to a string
+        result_string = ', '.join(selected_entities)
+        # Append to the result_strings list
+        result_strings.append(result_string)
+    
+    # Assign the result_strings list as a new column in the DataFrame
+    df['Prev Entities'] = result_strings
+    return df
+
+
+df = add_prev_entities_column(df)
+
+
+
+
+
 #this will make sure the input dataset only includes whats needed to train, and is formatted in a way to make it easier to retrive the outputs
 import pandas as pd
 from datasets import load_metric
 import numpy as np
 # Assuming df is your DataFrame
 # Make sure to load your DataFrame before this step
-df['formatted_input'] = df['Context'] + " ::: " + df['Text'] + " <speaker>"
+df['formatted_input'] = df['Context'] + ":Previous Entities: |"+ df['Prev Entities'] + "|"+ " ::: " + df['Text'] + " <speaker>"
 df['Entity Name'] = df['Entity Name'] + "<end>"
-df = df[['formatted_input', 'Entity Name']]
+#fuck you might need this??
+#df = df[['formatted_input', 'Entity Name']]
+
+
+
+
+#this will pull out 100 random rows to use as the testing dataframe 
+#and also remove them from the training dataframe
+
+
+import pandas as pd
+import numpy as np
+
+# Assume df is your original DataFrame
+# Let's create a sample DataFrame for demonstration
+#np.random.seed(0)  # For reproducibility
+#df = pd.DataFrame(np.random.randint(0, 100, size=(500, 10)), columns=[f"Col_{i}" for i in range(10)])
+
+# Step 2: Select 100 random rows
+random_rows = df.sample(n=100, random_state=1)  # Change n=100 to your desired number of rows and set a random_state for reproducibility
+
+# Step 3: Create the testing DataFrame with the selected rows
+testing_df = random_rows.copy()
+
+# Step 4: Remove the selected rows from the original DataFrame
+df.drop(random_rows.index, inplace=True)
+
+# Now, df has the rows removed, and testing_df contains only the selected 100 random rows
+
+
+
 
 #save the df as csv file for testing idk
 df.to_csv('GPT-2_training_df.csv', index=False)
-
+testing_df.to_csv('GPT-2_testing_df.csv', index=False)
 
 
 
@@ -992,7 +1068,7 @@ if tokenizer.pad_token is None:
 
 # Tokenize the text
 def tokenize_function(examples):
-    return tokenizer(examples["text"], padding="max_length", truncation=True, max_length=600)
+    return tokenizer(examples["text"], padding="max_length", truncation=True, max_length=800)#This is the max length of the input for the training data
 
 tokenized_dataset = dataset.map(tokenize_function, batched=True)
 
@@ -1041,7 +1117,8 @@ tokenizer.save_pretrained(model_save_path)
 
 
 
-#this is the infrence code for the trained gpt-2 model
+#this is the infrence code for the trained gpt-2 model but it uses the training data as a basis
+print("This infrence will use the training data as the testing data: ")
 
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 import pandas as pd
@@ -1092,7 +1169,7 @@ def extract_first_value(text, start_delim="<speaker>", end_delim="<end>"):
         return "No match found"
 
 
-num_of_tests = 5
+num_of_tests = 10
 correct_responces = 0
 for i in range(num_of_tests):
     # get random row values from dataframe 
@@ -1142,3 +1219,186 @@ print(output_string)
 
 
 
+
+
+
+
+
+
+#this is the infrence code for the trained gpt-2 model but it uses the testing data as a basis
+print("This infrence will use testing data not seen by the model")
+
+from transformers import GPT2LMHeadModel, GPT2Tokenizer
+import pandas as pd
+
+# Load the trained model
+
+model_path = "./trained_model"
+model = GPT2LMHeadModel.from_pretrained(model_path)
+tokenizer = GPT2Tokenizer.from_pretrained(model_path)
+
+# Function to generate the model's output given an input string
+def generate_output(input_string):
+    inputs = tokenizer(input_string, return_tensors="pt", padding=True, truncation=True, max_length=1000)
+    input_ids = inputs['input_ids']
+    attention_mask = inputs['attention_mask']
+
+    output = model.generate(
+        input_ids,
+        max_length=1000,  # Further reduce max length if expecting shorter responses
+        num_return_sequences=1,
+        attention_mask=attention_mask,
+        pad_token_id=tokenizer.eos_token_id,
+        temperature=0.5,  # Adjust temperature for determinism
+        top_k=50,  # Tighten top_k
+        top_p=0.95,  # Slightly loosen top_p for a bit of variability
+        no_repeat_ngram_size=2,
+        early_stopping=True,
+    )
+
+    generated_output = tokenizer.decode(output[0], skip_special_tokens=True)
+    return generated_output
+
+
+
+import re
+
+def extract_first_value(text, start_delim="<speaker>", end_delim="<end>"):
+    # Create a regular expression pattern to find text between the delimiters
+    pattern = re.escape(start_delim) + "(.*?)" + re.escape(end_delim)
+    
+    # Search for the pattern in the text
+    match = re.search(pattern, text)
+    
+    # If a match is found, return the first group (the text between the delimiters)
+    if match:
+        return match.group(1)  # `group(1)` refers to the text captured by `(.*?)`
+    else:
+        return "No match found"
+
+
+num_of_tests = 10
+correct_responces = 0
+for i in range(num_of_tests):
+    # get random row values from dataframe 
+    formatted_input, formatted_output = pd.read_csv("GPT-2_testing_df.csv").sample(1)[["formatted_input", 'Entity Name']].values[0] 
+    #print("INPUT")
+    #print(formatted_input)
+    #print("OUTPUT")
+    #print(formatted_output)
+
+    # Generate the model's output
+    output_string = generate_output(formatted_input)
+
+    # Print the generated output
+    print("Generated Output:")
+    #print(output_string)
+    #print("Extracting first answer from output...")
+    #print("Generated answer")
+    extracted_gen_answer = extract_first_value(output_string)
+    print(extracted_gen_answer)
+
+
+    #print the correct output
+    print("Correct output:")
+    formatted_output = formatted_output.replace('<end>', '')
+    print(formatted_output)
+
+
+    #compare the correct output with the generated output
+    if extracted_gen_answer.replace(" ", "") == formatted_output.replace(" ", ""):
+        correct_responces = correct_responces +1
+        print("Correct!")
+print(f'Accuracy score of : {correct_responces/num_of_tests}')
+'''
+# Get the input string from the user
+input_string = input("Enter an input string: ")
+
+# Generate the model's output
+output_string = generate_output(input_string)
+
+# Print the generated output
+print("Generated Output:")
+print(output_string)
+
+'''
+
+
+
+
+
+
+#This training data will wokr like the infrence in the pipline will work
+#It'll have to dynamically create the previous lists of used named on its own from its previous outputs
+
+from transformers import GPT2LMHeadModel, GPT2Tokenizer
+import pandas as pd
+import re
+
+# Load the trained model
+model_path = "./trained_model"
+model = GPT2LMHeadModel.from_pretrained(model_path)
+tokenizer = GPT2Tokenizer.from_pretrained(model_path)
+
+# Initialize the history list
+entity_history = []
+
+def extract_first_value(text, start_delim="<speaker>", end_delim="<end>"):
+    pattern = re.escape(start_delim) + "(.*?)" + re.escape(end_delim)
+    match = re.search(pattern, text)
+    if match:
+        return match.group(1).strip()  # Use strip() to remove leading/trailing whitespace
+    else:
+        return None
+
+def generate_output(input_string):
+    inputs = tokenizer(input_string, return_tensors="pt", padding=True, truncation=True, max_length=1000)
+    input_ids = inputs['input_ids']
+    attention_mask = inputs['attention_mask']
+
+    output = model.generate(
+        input_ids,
+        max_length=1000,
+        num_return_sequences=1,
+        attention_mask=attention_mask,
+        pad_token_id=tokenizer.eos_token_id,
+        temperature=0.5,
+        top_k=50,
+        top_p=0.95,
+        no_repeat_ngram_size=2,
+        early_stopping=True,
+    )
+
+    generated_output = tokenizer.decode(output[0], skip_special_tokens=True)
+    return extract_first_value(generated_output)
+
+# Main loop for inference
+num_of_tests = 10
+correct_responses = 0
+df = pd.read_csv("GPT-2_testing_df.csv")  # Load the DataFrame once outside the loop
+for i in range(num_of_tests):
+    # Select a random row from the DataFrame
+    row = df.sample(1).iloc[0]
+    formatted_input = row['Context'] + ": Previous Entities: |" + ", ".join(entity_history) + "| ::: " + row['Text'] + " <speaker>"
+
+    # Generate the model's output
+    output_string = generate_output(formatted_input)
+
+    # Extract the generated entity
+    #extracted_gen_answer = extract_first_value(output_string)
+    extracted_gen_answer = output_string
+    # Update the entity history, ensure uniqueness and limit size
+    if extracted_gen_answer and extracted_gen_answer not in entity_history:
+        if len(entity_history) >= 40:
+            entity_history.pop(0)  # Remove the oldest entity
+        entity_history.append(extracted_gen_answer)
+    
+    # No explicit comparison in this snippet, adjust as necessary for your use case
+
+# Optionally print or use the accuracy score if you have a comparison logic
+# print(f'Accuracy score of : {correct_responses/num_of_tests}')
+    # Comparison logic (may need adjustments based on exact requirements)
+    if extracted_gen_answer.replace(" ", "") == formatted_output.replace(" ", ""):
+        correct_responses += 1
+
+print(f'Accuracy score of : {correct_responses/num_of_tests}')
