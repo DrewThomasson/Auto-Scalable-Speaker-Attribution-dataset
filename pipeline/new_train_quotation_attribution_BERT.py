@@ -316,7 +316,8 @@ def main():
     from BERT_functions import replace_titles_and_abbreviations, revert_titles_and_abbreviations, split_csv_by_pauses, clean_csv_special_characters
     from make_quotes_dataset import split_csv_by_pauses
     split_csv_by_pauses("new_output_dir/combined_books.csv","new_output_dir/combined_books.csv")
-    shuffle_csv_in_place("new_output_dir/combined_books.csv")
+    #fuck what if i didnt shuffle it?
+    #shuffle_csv_in_place("new_output_dir/combined_books.csv")
     #clean_csv_special_characters()
 
 
@@ -986,6 +987,8 @@ df = add_prev_entities_column(df)
 
 
 
+
+
 #this will make sure the input dataset only includes whats needed to train, and is formatted in a way to make it easier to retrive the outputs
 import pandas as pd
 from datasets import load_metric
@@ -1031,6 +1034,11 @@ df.to_csv('GPT-2_training_df.csv', index=False)
 testing_df.to_csv('GPT-2_testing_df.csv', index=False)
 
 
+
+
+#fuck this shufffles the rows of the csv files
+shuffle_csv_in_place("GPT-2_training_df.csv")
+shuffle_csv_in_place("GPT-2_testing_df.csv")
 
 
 
@@ -1079,8 +1087,8 @@ tokenized_dataset.set_format(type='torch', columns=['input_ids', 'attention_mask
 training_args = TrainingArguments(
     output_dir="./results",
     overwrite_output_dir=True,
-    num_train_epochs=3,
-    per_device_train_batch_size=4,
+    num_train_epochs=6,
+    per_device_train_batch_size=8,
     save_steps=10000,
     save_total_limit=1,
 )
@@ -1122,6 +1130,7 @@ print("This infrence will use the training data as the testing data: ")
 
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 import pandas as pd
+from tqdm import tqdm
 
 # Load the trained model
 
@@ -1169,9 +1178,11 @@ def extract_first_value(text, start_delim="<speaker>", end_delim="<end>"):
         return "No match found"
 
 
-num_of_tests = 10
+num_of_tests = 100
 correct_responces = 0
-for i in range(num_of_tests):
+#this will make it show a loading bar for the number of tests
+#for i in range(num_of_tests):
+for i in tqdm(range(num_of_tests), desc="Processing Inference (Seen training data)"):
     # get random row values from dataframe 
     formatted_input, formatted_output = pd.read_csv("GPT-2_training_df.csv").sample(1)[["formatted_input", 'Entity Name']].values[0] 
     #print("INPUT")
@@ -1233,9 +1244,9 @@ import pandas as pd
 
 # Load the trained model
 
-model_path = "./trained_model"
-model = GPT2LMHeadModel.from_pretrained(model_path)
-tokenizer = GPT2Tokenizer.from_pretrained(model_path)
+#model_path = "./trained_model"
+#model = GPT2LMHeadModel.from_pretrained(model_path)
+#tokenizer = GPT2Tokenizer.from_pretrained(model_path)
 
 # Function to generate the model's output given an input string
 def generate_output(input_string):
@@ -1277,11 +1288,13 @@ def extract_first_value(text, start_delim="<speaker>", end_delim="<end>"):
         return "No match found"
 
 
-num_of_tests = 10
+num_of_tests = 100
 correct_responces = 0
-for i in range(num_of_tests):
+#this will make it show a loading bar for the number of tests
+#for i in range(num_of_tests):
+for i in tqdm(range(num_of_tests), desc="Processing Inference (Unseen training data)"):
     # get random row values from dataframe 
-    formatted_input, formatted_output = pd.read_csv("GPT-2_testing_df.csv").sample(1)[["formatted_input", 'Entity Name']].values[0] 
+    formatted_input, formatted_output = pd.read_csv("GPT-2_training_df.csv").sample(1)[["formatted_input", 'Entity Name']].values[0] 
     #print("INPUT")
     #print(formatted_input)
     #print("OUTPUT")
@@ -1304,6 +1317,11 @@ for i in range(num_of_tests):
     formatted_output = formatted_output.replace('<end>', '')
     print(formatted_output)
 
+
+    print()
+    print("Input: ")
+    print(formatted_input)
+    print()
 
     #compare the correct output with the generated output
     if extracted_gen_answer.replace(" ", "") == formatted_output.replace(" ", ""):
@@ -1334,11 +1352,12 @@ print(output_string)
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 import pandas as pd
 import re
+from tqdm import tqdm
 
 # Load the trained model
-model_path = "./trained_model"
-model = GPT2LMHeadModel.from_pretrained(model_path)
-tokenizer = GPT2Tokenizer.from_pretrained(model_path)
+#model_path = "./trained_model"
+#model = GPT2LMHeadModel.from_pretrained(model_path)
+#tokenizer = GPT2Tokenizer.from_pretrained(model_path)
 
 # Initialize the history list
 entity_history = []
@@ -1373,16 +1392,24 @@ def generate_output(input_string):
     return extract_first_value(generated_output)
 
 # Main loop for inference
-num_of_tests = 10
+num_of_tests = 100
 correct_responses = 0
 df = pd.read_csv("GPT-2_testing_df.csv")  # Load the DataFrame once outside the loop
-for i in range(num_of_tests):
+#this will make it show a loading bar for the number of tests
+#for i in range(num_of_tests):
+for i in tqdm(range(num_of_tests), desc="Processing Inference (Un-seen training data + grabbing entities from outputs)"):
     # Select a random row from the DataFrame
     row = df.sample(1).iloc[0]
     formatted_input = row['Context'] + ": Previous Entities: |" + ", ".join(entity_history) + "| ::: " + row['Text'] + " <speaker>"
+    formatted_output = row['Entity Name'].replace("<end>", "")
 
     # Generate the model's output
     output_string = generate_output(formatted_input)
+    print("Generated answer: ")
+    print(output_string)
+
+    print("Correct output: ")
+    print(formatted_output)
 
     # Extract the generated entity
     #extracted_gen_answer = extract_first_value(output_string)
@@ -1392,6 +1419,12 @@ for i in range(num_of_tests):
         if len(entity_history) >= 40:
             entity_history.pop(0)  # Remove the oldest entity
         entity_history.append(extracted_gen_answer)
+
+    print()
+    print("Input: ")
+    print(formatted_input)
+    print(entity_history)
+    print()
     
     # No explicit comparison in this snippet, adjust as necessary for your use case
 
@@ -1400,5 +1433,6 @@ for i in range(num_of_tests):
     # Comparison logic (may need adjustments based on exact requirements)
     if extracted_gen_answer.replace(" ", "") == formatted_output.replace(" ", ""):
         correct_responses += 1
+        print("Correct!")
 
 print(f'Accuracy score of : {correct_responses/num_of_tests}')
