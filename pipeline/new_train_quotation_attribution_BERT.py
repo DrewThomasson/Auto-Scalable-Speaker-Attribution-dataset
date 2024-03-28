@@ -260,6 +260,9 @@ def process_book_with_booknlp(input_file, output_directory, book_id):
     booknlp = BookNLP("en", model_params)
     booknlp.process(input_file, output_directory, book_id)
 
+
+'''
+#older non optomized version
 def process_all_books(input_dir, output_base_dir, include_unknown_names=True):
     all_book_files = glob.glob(os.path.join(input_dir, '*.txt'))
     combined_df = pd.DataFrame()
@@ -305,6 +308,47 @@ def process_all_books(input_dir, output_base_dir, include_unknown_names=True):
     if not combined_df.empty:
         combined_df.to_csv(combined_csv_path, index=False)
         print(f"Combined CSV saved to {combined_csv_path}")
+
+'''
+
+
+def process_all_books(input_dir, output_base_dir, include_unknown_names=True):
+    all_book_files = glob.glob(os.path.join(input_dir, '*.txt'))
+    combined_df = pd.DataFrame()
+
+    for book_file in tqdm(all_book_files, desc="Processing books"):
+        book_id = os.path.splitext(os.path.basename(book_file))[0]
+        output_directory = os.path.join(output_base_dir, book_id)
+        dataframe_file_path = os.path.join(output_directory, f"{book_id}_dataframe.csv")
+
+        # Skip processing if the dataframe file already exists
+        if os.path.exists(dataframe_file_path):
+            print(f"Dataframe for {book_id} already exists. Skipping...")
+            df = pd.read_csv(dataframe_file_path)
+        else:
+            # Only process with BookNLP if necessary
+            print(f"Processing with booknlp: {book_id}")
+            os.makedirs(output_directory, exist_ok=True)
+            process_book_with_booknlp(book_file, output_directory, book_id)
+            
+            print(f"Extracting data from: {book_id}")
+            quotes_file = os.path.join(output_directory, f"{book_id}.quotes")
+            entities_file = os.path.join(output_directory, f"{book_id}.entities")
+            tokens_file = os.path.join(output_directory, f"{book_id}.tokens")
+            
+            from make_quotes_dataset import process_files_dataframe
+            df = process_files_dataframe(quotes_file, entities_file, tokens_file, IncludeUnknownNames=include_unknown_names)
+            # Save the processed data to a new dataframe file
+            df.to_csv(dataframe_file_path, index=False)
+
+        combined_df = pd.concat([combined_df, df], ignore_index=True)
+
+    if not combined_df.empty:
+        combined_csv_path = os.path.join(output_base_dir, "combined_books.csv")
+        combined_df.to_csv(combined_csv_path, index=False)
+        print(f"Combined CSV saved to {combined_csv_path}")
+
+
 
 def main():
     input_dir = 'books'
@@ -1089,7 +1133,7 @@ training_args = TrainingArguments(
     overwrite_output_dir=True,
     num_train_epochs=6,
     per_device_train_batch_size=7,
-    save_steps=10000,
+    save_steps=1000,
     save_total_limit=1,
 )
 
