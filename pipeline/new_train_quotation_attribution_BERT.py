@@ -1088,7 +1088,7 @@ training_args = TrainingArguments(
     output_dir="./results",
     overwrite_output_dir=True,
     num_train_epochs=6,
-    per_device_train_batch_size=8,
+    per_device_train_batch_size=7,
     save_steps=10000,
     save_total_limit=1,
 )
