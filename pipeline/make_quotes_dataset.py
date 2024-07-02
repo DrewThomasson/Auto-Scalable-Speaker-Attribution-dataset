@@ -204,9 +204,9 @@ def process_files(quotes_file, entities_file, tokens_file, output_file_path, Inc
 
     #This should fix any bad line errors by making it just skip any bad lines
     try:
-        df_quotes = pd.read_csv(quotes_file, delimiter="\t", quoting=csv.QUOTE_NONE, error_bad_lines=False)
-        df_entities = pd.read_csv(entities_file, delimiter="\t", quoting=csv.QUOTE_NONE, error_bad_lines=False)
-        df_tokens = pd.read_csv(tokens_file, delimiter="\t", quoting=csv.QUOTE_NONE, error_bad_lines=False)
+        df_quotes = pd.read_csv(quotes_file, delimiter="\t", quoting=csv.QUOTE_NONE, on_bad_lines='skip')
+        df_entities = pd.read_csv(entities_file, delimiter="\t", quoting=csv.QUOTE_NONE, on_bad_lines='skip')
+        df_tokens = pd.read_csv(tokens_file, delimiter="\t", quoting=csv.QUOTE_NONE, on_bad_lines='skip')
     except pd.errors.ParserError as e:
         print(f"Error reading one of the files: {e}")
 
@@ -341,9 +341,9 @@ def process_files_dataframe(quotes_file, entities_file, tokens_file, IncludeUnkn
 
     #This should fix any bad line errors by making it just skip any bad lines
     try:
-        df_quotes = pd.read_csv(quotes_file, delimiter="\t", quoting=csv.QUOTE_NONE, error_bad_lines=False)
-        df_entities = pd.read_csv(entities_file, delimiter="\t", quoting=csv.QUOTE_NONE, error_bad_lines=False)
-        df_tokens = pd.read_csv(tokens_file, delimiter="\t", quoting=csv.QUOTE_NONE, error_bad_lines=False)
+        df_quotes = pd.read_csv(quotes_file, delimiter="\t", quoting=csv.QUOTE_NONE, on_bad_lines='skip')
+        df_entities = pd.read_csv(entities_file, delimiter="\t", quoting=csv.QUOTE_NONE, on_bad_lines='skip')
+        df_tokens = pd.read_csv(tokens_file, delimiter="\t", quoting=csv.QUOTE_NONE, on_bad_lines='skip')
     except pd.errors.ParserError as e:
         print(f"Error reading one of the files: {e}")
 
