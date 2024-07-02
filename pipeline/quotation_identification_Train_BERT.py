@@ -149,15 +149,12 @@ process_all_books()
 
 
 
-
-import pandas as pd
 import glob
-import os
-
 import pandas as pd
 import os
+from tqdm import tqdm
 
-def combine_csv_files(root_dir):
+def combine_csv_files(root_dir, max_rows_per_book=float('inf')):
     all_csv_files = []
 
     # Walk through all directories and files starting from root_dir
@@ -174,8 +171,8 @@ def combine_csv_files(root_dir):
     # Initialize an empty DataFrame to hold combined data
     combined_df = pd.DataFrame()
 
-    # Process each CSV file
-    for csv_file in all_csv_files:
+    # Process each CSV file with a progress bar
+    for csv_file in tqdm(all_csv_files, desc="Processing CSV files"):
         try:
             # Read the CSV file
             df = pd.read_csv(csv_file)
@@ -190,21 +187,35 @@ def combine_csv_files(root_dir):
                 if col not in df.columns:
                     df[col] = "Probs Narrator"
 
+            # Add a 'Book' column based on the CSV filename
+            book_name = os.path.splitext(os.path.basename(csv_file))[0]
+            df['Book'] = book_name
+
+            # Randomly sample up to max_rows_per_book
+            if len(df) > max_rows_per_book:
+                df = df.sample(n=max_rows_per_book, random_state=42)
+
             # Append to the combined DataFrame
-            combined_df = pd.concat([combined_df, df[required_columns + optional_columns]], ignore_index=True)
+            combined_df = pd.concat([combined_df, df], ignore_index=True)
         
         except pd.errors.EmptyDataError:
             print(f"Skipping {csv_file} due to being empty or improperly formatted.")
 
+    # Shuffle the final combined DataFrame
+    combined_df = combined_df.sample(frac=1, random_state=42).reset_index(drop=True)
+
     # Save the combined DataFrame to a new CSV file
-    combined_df.to_csv('combined_csv.csv', index=False)
+    output_file = 'combined_csv.csv'
+    combined_df.to_csv(output_file, index=False)
+
+    print(f"Combined CSV saved to {output_file} with {len(combined_df)} total rows.")
 
     return combined_df
 
 # Example usage
 # Replace 'path_to_your_directory' with the actual path to the directory containing your CSV files
 root_dir = "output_dir"
-combined_data = combine_csv_files(root_dir)
+combined_data = combine_csv_files(root_dir, max_rows_per_book=1000)
 
 
 
