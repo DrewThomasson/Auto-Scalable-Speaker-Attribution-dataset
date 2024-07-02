@@ -95,6 +95,15 @@ def process_all_books(input_dir='books/'):
     for input_file in glob.glob(os.path.join(input_dir, '*.txt')):
         book_name = os.path.splitext(os.path.basename(input_file))[0]
         output_directory = f'output_dir/{book_name}/'
+        
+        # Check if all required files already exist
+        required_files = [f'{book_name}.quotes', f'{book_name}.tokens', f'{book_name}.entities']
+        all_files_exist = all(os.path.exists(os.path.join(output_directory, file)) for file in required_files)
+        
+        if all_files_exist:
+            print(f"Skipping {book_name} as it has already been processed.")
+            continue
+        
         os.makedirs(output_directory, exist_ok=True)
         
         # Process the book with BookNLP to generate .quotes, .tokens, and .entities files
@@ -322,7 +331,9 @@ df['is_quote_encoded'] = label_encoder.fit_transform(df['Is Quote'])
 train_df, val_df = train_test_split(df, test_size=0.1)
 
 # Initializing the BERT tokenizer
-tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+from transformers import DistilBertTokenizer
+
+tokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased')
 
 # Tokenizing function that processes the data for BERT
 def tokenize_function(examples):
@@ -352,7 +363,9 @@ train_dataset = QuotationDataset(train_encodings, train_df['is_quote_encoded'].v
 val_dataset = QuotationDataset(val_encodings, val_df['is_quote_encoded'].values)
 
 # Load the BERT model for sequence classification configured for binary classification
-model = BertForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=2).to(device)
+from transformers import DistilBertForSequenceClassification
+
+model = DistilBertForSequenceClassification.from_pretrained('distilbert-base-uncased', num_labels=2).to(device)
 
 # Define the compute_metrics function for evaluating the model
 def compute_metrics(p):
