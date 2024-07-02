@@ -19,9 +19,17 @@
 
 
 
+
+
 import pandas as pd
 import re
+import torch
+from transformers import DistilBertTokenizer, DistilBertForSequenceClassification, BertTokenizerFast
+from tqdm import tqdm
+import tkinter as tk
+from tkinter import scrolledtext
 
+# Define the replacement functions
 def replace_titles_and_abbreviations(text):
     replacements = {
         r"Mr\.": "<MR>", r"Ms\.": "<MS>", r"Mrs\.": "<MRS>", r"Dr\.": "<DR>",
@@ -66,67 +74,8 @@ def split_text_by_pauses(text):
     parts_with_punctuation = [revert_titles_and_abbreviations(part) for part in parts_with_punctuation]
     return parts_with_punctuation
 
-
-
-def Process_txt_into_BERT_quotes_input_dataframe(filepath):
-    
-    # Read the entire text file
-    with open(filepath, 'r', encoding='utf-8') as file:
-        text = file.read()
-    
-    # Pre-process the text for sentence splitting
-    processed_text = replace_titles_and_abbreviations(text)
-    
-    # Split text into sentences
-    sentences = split_text_by_pauses(processed_text)
-    
-    # Initialize DataFrame columns
-    data = {
-        'Text': [],
-        'Context': [],
-        'Text start char': [],
-        'Text end char': [],
-        'Context start char': [],
-        'Context end char': [],
-        'Is Quote': []  # Leaving blank as instructed
-    }
-    
-    # Iterate over sentences to fill the DataFrame
-    for sentence in sentences:
-        # Find the original sentence in the text
-        start_idx = text.find(sentence)
-        end_idx = start_idx + len(sentence)
-        
-        # Approximate context range - adjust the numbers to match BERT tokens' equivalent
-        context_start = max(0, start_idx - 200)  # Assuming 200 characters represent 200 BERT tokens
-        context_end = min(len(text), end_idx + 200)
-        
-        context = text[context_start:context_end]
-        
-        # Populate data dictionary
-        data['Text'].append(sentence)
-        data['Context'].append(context)
-        data['Text start char'].append(start_idx)
-        data['Text end char'].append(end_idx)
-        data['Context start char'].append(context_start)
-        data['Context end char'].append(context_end)
-        data['Is Quote'].append('')  # Blank as per instructions
-    
-    # Create DataFrame
-    df = pd.DataFrame(data)
-    
-    return df
-
-
-
-
-import pandas as pd
-#from transformers import BertTokenizer
-from transformers import BertTokenizerFast
-
 def Process_txt_into_BERT_quotes_input_dataframe(filepath):
     # Initialize the BERT tokenizer
-    #tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
     tokenizer = BertTokenizerFast.from_pretrained('bert-base-uncased')
     
     # Read the entire text file
@@ -186,45 +135,15 @@ def Process_txt_into_BERT_quotes_input_dataframe(filepath):
     
     return df
 
-
-
-
-
-# You'll need to replace 'your_text_file.txt' with the actual file path
-df = Process_txt_into_BERT_quotes_input_dataframe('Book.txt')
-print(df)
-df.to_csv('BERT_infrence_quote_input.csv', index=False)
-#THIS will put all of the values in df into original_df
-original_df = df.copy()
-
-
-#next I want to clean up the two columns "Text" and "Context"
-
-
-from make_non_quotes_dataset import clean_csv_special_characters
-columns_to_clean = ['Context', 'Text']  # Columns to clean
-clean_csv_special_characters('BERT_infrence_quote_input.csv', 'BERT_infrence_quote_input.csv', columns_to_clean)
-
-
-#next I want to make function that will use the pretrained BERT to take in the current dataframe and output with the 'Is Quote' columns rows labled 
-
-
-
-import torch
-from transformers import BertTokenizer, BertForSequenceClassification
-import re
-
-
 def predict_quote(context, text, model_checkpoint_path="./quotation_identifer_model/checkpoint-1000"):
-
     # Combine context and text to create the formatted input
     formatted_input = f"{context} : Is Sentence Quote : {text}"
     
     # Load the pre-trained model checkpoint
-    model = BertForSequenceClassification.from_pretrained(model_checkpoint_path)
+    model = DistilBertForSequenceClassification.from_pretrained(model_checkpoint_path)
     
     # Define the tokenizer
-    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+    tokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased')
     
     # Tokenize the input text
     tokenized_input = tokenizer(formatted_input, padding="max_length", truncation=True, max_length=512, return_tensors="pt")
@@ -240,63 +159,9 @@ def predict_quote(context, text, model_checkpoint_path="./quotation_identifer_mo
     label_encoder = {0: "Not a Quote", 1: "Quote"}
     
     # Return True if predicted label is "Quote", False otherwise
-    print(label_encoder[predicted_label] == "Quote")
     return label_encoder[predicted_label] == "Quote"
 
-
-
-
-import pandas as pd
-from tqdm import tqdm
-
-
-# Read the CSV file into a DataFrame
-csv_df = pd.read_csv('BERT_infrence_quote_input.csv')
-
-
-
-
 def fill_is_quote_column(df, model_checkpoint_path="./quotation_identifer_model/checkpoint-1000"):
-    """
-    Updates the 'Is Quote' column in the DataFrame based on predictions from the predict_quote function.
-
-    Parameters:
-    - df: pandas.DataFrame with at least 'Text' and 'Context' columns.
-    - model_checkpoint_path: str, path to the model checkpoint used for prediction.
-
-    Returns:
-    - pandas.DataFrame with the 'Is Quote' column updated based on predictions.
-    """
-    # Ensure 'Is Quote' column exists
-    if 'Is Quote' not in df.columns:
-        df['Is Quote'] = None
-    
-    # Iterate over DataFrame rows
-    for index, row in df.iterrows():
-        context = row['Context']
-        text = row['Text']
-        # Call the predict_quote function for each row and update the 'Is Quote' column
-        df.at[index, 'Is Quote'] = predict_quote(context, text, model_checkpoint_path)
-    
-    return df
-
-
-
-
-import pandas as pd
-from tqdm import tqdm
-
-def fill_is_quote_column(df, model_checkpoint_path="./quotation_identifer_model/checkpoint-1000"):
-    """
-    Updates the 'Is Quote' column in the DataFrame based on predictions from the predict_quote function.
-
-    Parameters:
-    - df: pandas.DataFrame with at least 'Text' and 'Context' columns.
-    - model_checkpoint_path: str, path to the model checkpoint used for prediction.
-
-    Returns:
-    - pandas.DataFrame with the 'Is Quote' column updated based on predictions.
-    """
     # Ensure 'Is Quote' column exists
     if 'Is Quote' not in df.columns:
         df['Is Quote'] = None
@@ -313,73 +178,13 @@ def fill_is_quote_column(df, model_checkpoint_path="./quotation_identifer_model/
 
     return df
 
-
-
-
-
-
-
-
-
-
-csv_df = fill_is_quote_column(csv_df)
-
-csv_df.to_csv('BERT_infrence_quote_input.csv', index=False)
-
-
-
-
-
-import pandas as pd
-
 def transfer_quotes(complete_df, incomplete_df):
-    """
-    Transfers quotes from the complete DataFrame to the incomplete DataFrame.
-
-    Parameters:
-    - complete_df: pandas.DataFrame with the "Is Quote" column filled.
-    - incomplete_df: pandas.DataFrame with the "Is Quote" column not filled.
-
-    Returns:
-    - pandas.DataFrame with the "Is Quote" column filled.
-    """
+    # Transfers quotes from the complete DataFrame to the incomplete DataFrame.
     for index, row in complete_df.iterrows():
         is_quote = row['Is Quote']
         if pd.notna(is_quote):
             incomplete_df.at[index, 'Is Quote'] = is_quote
-
     return incomplete_df
-
-# Example usage
-#complete_df = pd.read_csv('complete_dataframe.csv')  # Load your complete DataFrame
-#incomplete_df = pd.read_csv('incomplete_dataframe.csv')  # Load your incomplete DataFrame
-
-# Transfer quotes
-#incomplete_df_with_quotes = transfer_quotes(complete_df, incomplete_df)
-
-# Save or use the updated incomplete DataFrame
-#incomplete_df_with_quotes.to_csv('incomplete_dataframe_with_quotes.csv', index=False)
-
-
-original_df = transfer_quotes(csv_df, original_df)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import tkinter as tk
-from tkinter import scrolledtext
-import pandas as pd
 
 def visualize_quotes(df):
     root = tk.Tk()
@@ -388,28 +193,89 @@ def visualize_quotes(df):
     text_box = scrolledtext.ScrolledText(root, width=40, height=10, wrap=tk.WORD)
     text_box.grid(row=0, column=0, padx=10, pady=10)
 
+    def is_actual_quote(start_idx, end_idx, df):
+        quote_delimiters = get_quote_delimiters(df)
+        for left_quote_start, left_quote_end, right_quote_start, right_quote_end in quote_delimiters:
+            if start_idx >= left_quote_start and end_idx <= right_quote_end:
+                return True
+        return False
+
+    def get_quote_delimiters(df):
+        quote_delimiters = []
+        quote_delimiter_pattern = re.compile(r'[“”"‘’\'\']')
+        for _, row in df.iterrows():
+            context = row['Context']
+            matches = quote_delimiter_pattern.finditer(context)
+            quotes = [match.span() for match in matches]
+            for i in range(0, len(quotes), 2):
+                if i + 1 < len(quotes):
+                    quote_delimiters.append((quotes[i][0], quotes[i][1], quotes[i+1][0], quotes[i+1][1]))
+        return quote_delimiters
+
+    # Calculate the number of correct and incorrect predictions
+    total_segments = len(df)
+    correct_predictions = 0
+    incorrect_predictions = 0
+
+    for _, row in df.iterrows():
+        is_quote_prediction = row['Is Quote']
+        actual_quote = is_actual_quote(row['Text start char'], row['Text end char'], df)
+        if is_quote_prediction == actual_quote:
+            correct_predictions += 1
+        else:
+            incorrect_predictions += 1
+
+    #accuracy = (correct_predictions / total_segments) * 100
+
+    # Display the accuracy
+    #accuracy_label = tk.Label(root, text=f"Accuracy: {accuracy:.2f}% ({correct_predictions}/{total_segments})")
+    #accuracy_label.grid(row=1, column=0, padx=10, pady=10)
+
     # Function to highlight text based on 'Is Quote' column
     def highlight_text():
         text_box.delete('1.0', tk.END)
+        red_highlight_count = 0
+        yellow_highlight_count = 0
+        no_highlight_count = 0
         for _, row in df.iterrows():
             text = row['Text']
             is_quote = row['Is Quote']
-            if is_quote:
+            start_idx = row['Text start char']
+            end_idx = row['Text end char']
+            if is_quote and not is_actual_quote(start_idx, end_idx, df):
+                text_box.insert(tk.END, text + "\n", 'wrong')
+                red_highlight_count += 1
+            elif is_quote:
                 text_box.insert(tk.END, text + "\n", 'quote')
+                yellow_highlight_count += 1
             else:
                 text_box.insert(tk.END, text + "\n")
+                no_highlight_count += 1
+        # Print the counts of each highlight category
+        print(f"Number of incorrect highlights (red): {red_highlight_count}")
+        print(f"Number of correct highlights (yellow): {yellow_highlight_count}")
+        print(f"Number of non-highlighted segments: {no_highlight_count}")
+        # Display the accuracy
+        total_segments = red_highlight_count+yellow_highlight_count+no_highlight_count
+        correct_predictions = yellow_highlight_count+no_highlight_count
+        accuracy = (correct_predictions / total_segments) * 100
+        accuracy_label = tk.Label(root, text=f"Accuracy: {accuracy:.2f}% ({correct_predictions}/{total_segments})")
+        accuracy_label.grid(row=1, column=0, padx=10, pady=10)
 
     text_box.tag_configure('quote', background='yellow')
+    text_box.tag_configure('wrong', underline=True)  # Only underline for incorrect predictions
 
     highlight_text()  # Initial highlight
 
     root.mainloop()
 
-# Example usage
-#csv_df = pd.read_csv('BERT_infrence_quote_input.csv')  # Load your DataFrame here
-#visualize_quotes(csv_df)
+
+
+
+
+# Main process
+df = Process_txt_into_BERT_quotes_input_dataframe('Book.txt')
+df = fill_is_quote_column(df)
+original_df = df.copy()  # Copy the dataframe to preserve the original data
+original_df = transfer_quotes(df, original_df)
 visualize_quotes(original_df)
-
-
-
-
