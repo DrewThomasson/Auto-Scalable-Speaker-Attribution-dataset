@@ -1,6 +1,7 @@
 import os
 import re
 import csv
+import queue
 import subprocess
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
@@ -12,14 +13,16 @@ class BookAnalyzer(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("Book Analyzer")
-        self.geometry("600x400")
+        self.geometry("800x600")
         self.style = ttk.Style()
         self.style.theme_use('clam')
         self.model = "deepseek-r1:1.5b"
         self.current_file = ""
+        self.token_queue = queue.Queue()
         
         self.create_widgets()
         self.check_calibre()
+        self.after(100, self.update_display)
 
     def check_calibre(self):
         try:
@@ -63,6 +66,16 @@ class BookAnalyzer(tk.Tk):
         
         self.status = ttk.Label(main_frame, text="Ready")
         self.status.pack(pady=5)
+
+        # Streaming Display
+        stream_frame = ttk.LabelFrame(main_frame, text="Live Generation", padding=10)
+        stream_frame.pack(fill='both', expand=True, pady=5)
+        
+        self.stream_text = tk.Text(stream_frame, wrap=tk.WORD, height=10)
+        scrollbar = ttk.Scrollbar(stream_frame, orient=tk.VERTICAL, command=self.stream_text.yview)
+        self.stream_text.configure(yscrollcommand=scrollbar.set)
+        self.stream_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
     def select_file(self):
         path = filedialog.askopenfilename(
@@ -108,22 +121,18 @@ class BookAnalyzer(tk.Tk):
                       check=True, 
                       stdout=subprocess.DEVNULL)
         return output_path
-        
 
     def process_quotes(self, txt_path):
         self.status.config(text="Extracting quotes...")
         with open(txt_path, 'r', encoding='utf-8') as f:
             text = f.read()
         
-        # Get delimiters
         start_d = self.start_delim.get().strip() or self.detect_delimiters(text)
         end_d = self.end_delim.get().strip() or self.detect_delimiters(text, end=True)
         
-        # Extract quotes
         pattern = re.compile(f'{re.escape(start_d)}.*?{re.escape(end_d)}', re.DOTALL)
         quotes = [m for m in pattern.finditer(text)]
         
-        # Write CSVs
         self.write_csv('quotes.csv', quotes, text, is_quote=True)
         self.write_csv('non_quotes.csv', quotes, text, is_quote=False)
 
@@ -141,16 +150,8 @@ class BookAnalyzer(tk.Tk):
         
         for match in sorted(quotes, key=lambda x: x.start()):
             if is_quote:
-                entries.append([
-                    match.group(), 
-                    match.start(), 
-                    match.end(), 
-                    'True', 
-                    '', 
-                    ''
-                ])
+                entries.append([match.group(), match.start(), match.end(), 'True', '', ''])
             else:
-                # Handle non-quote text
                 if match.start() > prev_end:
                     snippet = text[prev_end:match.start()].strip()
                     if snippet:
@@ -198,15 +199,44 @@ class BookAnalyzer(tk.Tk):
         pd.concat([quotes, non_quotes]).sort_values('Start').to_csv('book.csv', index=False)
 
     def ask_llm(self, prompt):
-        response = ollama.generate(model=self.model, prompt=prompt)
-        raw = response['response']
+        full_response = ""
+        thinking_text = ""
+        speaker = ""
         
-        # Extract thinking/answer
-        thinking = re.search(r'<think>(.*?)</think>', raw, re.DOTALL)
-        return (
-            re.sub(r'<think>.*?</think>', '', raw).strip(),
-            thinking.group(1).strip() if thinking else ""
+        # Stream the response
+        stream = ollama.generate(
+            model=self.model,
+            prompt=prompt,
+            stream=True,
+            options={'num_ctx': 4096}
         )
+        
+        for chunk in stream:
+            token = chunk['response']
+            full_response += token
+            # Send to both GUI and terminal
+            self.token_queue.put(token)
+            print(token, end='', flush=True)  # Terminal output
+        
+        # Parse final response
+        thinking_match = re.search(r'<think>(.*?)</think>', full_response, re.DOTALL)
+        if thinking_match:
+            thinking_text = thinking_match.group(1).strip()
+            speaker = re.sub(r'<think>.*?</think>', '', full_response).strip()
+        else:
+            speaker = full_response.strip()
+        
+        return speaker, thinking_text
+
+    def update_display(self):
+        try:
+            while True:
+                token = self.token_queue.get_nowait()
+                self.stream_text.insert(tk.END, token)
+                self.stream_text.see(tk.END)
+        except queue.Empty:
+            pass
+        self.after(50, self.update_display)
 
 if __name__ == "__main__":
     app = BookAnalyzer()
