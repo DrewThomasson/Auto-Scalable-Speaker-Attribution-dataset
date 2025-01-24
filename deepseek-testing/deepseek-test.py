@@ -108,10 +108,11 @@ class BookAnalyzer(tk.Tk):
                       check=True, 
                       stdout=subprocess.DEVNULL)
         return output_path
+        
 
     def process_quotes(self, txt_path):
         self.status.config(text="Extracting quotes...")
-        with open(txt_path, 'r') as f:
+        with open(txt_path, 'r', encoding='utf-8') as f:
             text = f.read()
         
         # Get delimiters
@@ -125,7 +126,7 @@ class BookAnalyzer(tk.Tk):
         # Write CSVs
         self.write_csv('quotes.csv', quotes, text, is_quote=True)
         self.write_csv('non_quotes.csv', quotes, text, is_quote=False)
-        
+
     def detect_delimiters(self, text, end=False):
         sample = text[:2000]
         response = ollama.generate(
@@ -166,7 +167,7 @@ class BookAnalyzer(tk.Tk):
         quotes = pd.read_csv('quotes.csv')
         speakers = []
         
-        with open(txt_path, 'r') as f:
+        with open(txt_path, 'r', encoding='utf-8') as f:
             full_text = f.read()
         
         for idx, row in quotes.iterrows():
