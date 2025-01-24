@@ -2,6 +2,7 @@ import os
 import re
 import csv
 import queue
+import time
 import subprocess
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
@@ -19,10 +20,13 @@ class BookAnalyzer(tk.Tk):
         self.model = "deepseek-r1:1.5b"
         self.current_file = ""
         self.token_queue = queue.Queue()
+        self.generation_timeout = 120  # Seconds per response
+        self.max_retries = 2  # Max retries per quote
+        self.abort_flag = threading.Event()
         
         self.create_widgets()
         self.check_calibre()
-        self.after(100, self.update_display)
+        self.after(50, self.update_display)
 
     def check_calibre(self):
         try:
@@ -90,6 +94,7 @@ class BookAnalyzer(tk.Tk):
             messagebox.showerror("Error", "Select a book file first")
             return
         
+        self.abort_flag.clear()
         thread = threading.Thread(target=self.full_analysis)
         thread.start()
 
@@ -104,8 +109,9 @@ class BookAnalyzer(tk.Tk):
             self.status.config(text="Ready")
             self.progress['value'] = 0
         except Exception as e:
-            messagebox.showerror("Error", str(e))
-            self.status.config(text="Failed")
+            if not self.abort_flag.is_set():
+                messagebox.showerror("Error", str(e))
+                self.status.config(text="Failed")
 
     def convert_to_text(self, path):
         self.status.config(text="Converting to text...")
@@ -172,6 +178,9 @@ class BookAnalyzer(tk.Tk):
             full_text = f.read()
         
         for idx, row in quotes.iterrows():
+            if self.abort_flag.is_set():
+                break
+            
             start = max(0, row['Start'] - 500)
             end = min(len(full_text), row['End'] + 500)
             context = full_text[start:end]
@@ -190,9 +199,13 @@ class BookAnalyzer(tk.Tk):
             quotes.at[idx, 'Reasoning'] = reasoning
             self.progress['value'] = (idx+1)/len(quotes)*100
         
-        quotes.to_csv('quotes.csv', index=False)
+        if not self.abort_flag.is_set():
+            quotes.to_csv('quotes.csv', index=False)
 
     def merge_results(self):
+        if self.abort_flag.is_set():
+            return
+            
         self.status.config(text="Finalizing...")
         quotes = pd.read_csv('quotes.csv')
         non_quotes = pd.read_csv('non_quotes.csv')
@@ -202,38 +215,88 @@ class BookAnalyzer(tk.Tk):
         full_response = ""
         thinking_text = ""
         speaker = ""
-        
-        # Stream the response
-        stream = ollama.generate(
-            model=self.model,
-            prompt=prompt,
-            stream=True,
-            options={'num_ctx': 4096}
-        )
-        
-        for chunk in stream:
-            token = chunk['response']
-            full_response += token
-            # Send to both GUI and terminal
-            self.token_queue.put(token)
-            print(token, end='', flush=True)  # Terminal output
-        
-        # Parse final response
+        retries = 0
+        success = False
+
+        # Clear previous output
+        self.token_queue.put("CLEAR")
+
+        while not success and retries <= self.max_retries and not self.abort_flag.is_set():
+            try:
+                stop_event = threading.Event()
+                timer = threading.Timer(self.generation_timeout, stop_event.set)
+                timer.start()
+
+                stream = ollama.generate(
+                    model=self.model,
+                    prompt=prompt,
+                    stream=True,
+                    options={'num_ctx': 4096}
+                )
+
+                start_time = time.time()
+                token_count = 0
+                
+                for chunk in stream:
+                    if stop_event.is_set() or token_count > 1000 or self.abort_flag.is_set():
+                        raise TimeoutError("Generation aborted")
+                    
+                    token = chunk['response']
+                    full_response += token
+                    token_count += 1
+                    
+                    # Update displays
+                    self.token_queue.put(token)
+                    print(token, end='', flush=True)
+                    
+                    # Reset timeout timer
+                    timer.cancel()
+                    timer = threading.Timer(self.generation_timeout, stop_event.set)
+                    timer.start()
+
+                # Successful completion
+                timer.cancel()
+                success = True
+
+            except (TimeoutError, Exception) as e:
+                self.token_queue.put(f"\n⚠️ Error: {str(e)}. Retrying ({retries}/{self.max_retries})...\n")
+                print(f"\nError: {str(e)}")
+                retries += 1
+                full_response = ""
+                time.sleep(1)
+                
+                if retries > self.max_retries:
+                    self.token_queue.put("\n❌ Failed after retries. Moving to next quote.\n")
+                    return "Unknown", "Generation failed after multiple attempts"
+
+            finally:
+                try:
+                    timer.cancel()
+                except:
+                    pass
+
+        if self.abort_flag.is_set():
+            return "Aborted", "Process cancelled"
+
+        # Parse response
         thinking_match = re.search(r'<think>(.*?)</think>', full_response, re.DOTALL)
         if thinking_match:
             thinking_text = thinking_match.group(1).strip()
             speaker = re.sub(r'<think>.*?</think>', '', full_response).strip()
         else:
             speaker = full_response.strip()
-        
+
         return speaker, thinking_text
 
     def update_display(self):
         try:
             while True:
-                token = self.token_queue.get_nowait()
-                self.stream_text.insert(tk.END, token)
-                self.stream_text.see(tk.END)
+                content = self.token_queue.get_nowait()
+                if content == "CLEAR":
+                    self.stream_text.delete(1.0, tk.END)
+                else:
+                    self.stream_text.insert(tk.END, content)
+                    self.stream_text.see(tk.END)
         except queue.Empty:
             pass
         self.after(50, self.update_display)
