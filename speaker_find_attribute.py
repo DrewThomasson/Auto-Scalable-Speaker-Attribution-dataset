@@ -6,18 +6,16 @@ from tkinter import ttk, filedialog, messagebox
 import threading
 import os
 
-import os
 from openai import OpenAI
 
 
-api_key = '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'
 model = "gpt-4"
 
-# Set your API key here
-client = OpenAI(
-    # defaults to os.environ.get("OPENAI_API_KEY")
-    api_key=api_key,
-)
+# Read the API key from the environment variable OPENAI_API_KEY.
+# Set this variable before running the script, e.g.:
+#   export OPENAI_API_KEY="your-key-here"
+# or place it in a .env file and load it with python-dotenv.
+client = OpenAI()
 
 
 def generate_outline(text):
@@ -162,6 +160,10 @@ def create_gui():
     ttk.Label(root, text="OpenAI API Key:").pack(pady=10, padx=10)
     api_key_entry = ttk.Entry(root, width=50, show="*")
     api_key_entry.pack(pady=10, padx=10)
+    # Pre-fill from environment variable if available
+    env_api_key = os.environ.get("OPENAI_API_KEY", "")
+    if env_api_key:
+        api_key_entry.insert(0, env_api_key)
 
     ttk.Label(root, text="Text File:").pack(pady=10, padx=10)
     txt_file_entry = ttk.Entry(root, width=40)
