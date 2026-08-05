@@ -5,7 +5,12 @@ This is my attempt at implementing a method for scaling speaker attribution data
 The hope for this is to use this methology to create a speaker attribution dataset for nearly all books found in project gutenburg
 
 ## How to run
-- python run_gui.py
+
+1. Install the `openai` and `pandas` Python packages.
+2. Run `python run_gui.py`.
+3. Enter your OpenAI API key in the masked key field. If `OPENAI_API_KEY` is set in your environment, the field is pre-filled automatically.
+
+Never commit API keys to the repository. Local `.env` files are ignored, but the application does not load them automatically.
 
 
 <img width="1019" alt="Screenshot 2023-12-04 at 5 06 55 PM" src="https://github.com/DrewThomasson/Auto-Scalable-Speaker-Attribution-dataset/assets/126999465/f93fb7b1-c741-4540-a647-65d1f8a49e61">

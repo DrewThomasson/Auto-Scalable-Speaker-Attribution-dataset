@@ -1,4 +1,3 @@
-import openai
 import pandas as pd
 import time
 import tkinter as tk
@@ -11,14 +10,8 @@ from openai import OpenAI
 
 model = "gpt-4"
 
-# Read the API key from the environment variable OPENAI_API_KEY.
-# Set this variable before running the script, e.g.:
-#   export OPENAI_API_KEY="your-key-here"
-# or place it in a .env file and load it with python-dotenv.
-client = OpenAI()
 
-
-def generate_outline(text):
+def generate_outline(client, text):
     """
     Generates an outline based on the input text.
     """
@@ -67,7 +60,7 @@ def extract_context(sentence, filename):
 #    return response.choices[0].message['content'].strip()
 
 
-def ask_openai(context, sentence, names):
+def ask_openai(client, context, sentence, names):
     """
     Generates an outline based on the input text.
     """
@@ -97,7 +90,7 @@ def warn_about_costs(txt_file_path):
     return True
 
 def main(api_key, txt_file_path, progress_var, status_label, num_of_wanted_requests, message_label):
-    openai.api_key = api_key
+    client = OpenAI(api_key=api_key)
     df = pd.read_csv('quotes.csv')
     responses = []
     names = []
@@ -106,7 +99,7 @@ def main(api_key, txt_file_path, progress_var, status_label, num_of_wanted_reque
     for index, row in df.head(num_of_wanted_requests).iterrows():
         sentence = extract_sentence(row['Start Location'], row['End Location'], txt_file_path)
         context = extract_context(sentence, txt_file_path)
-        response = ask_openai(context, sentence, names)
+        response = ask_openai(client, context, sentence, names)
         responses.append(response)
         if response not in names:
             names.append(response)
