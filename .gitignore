@@ -1,0 +1,10 @@
+# Environment variable files — never commit secrets
+.env
+.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/

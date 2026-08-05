@@ -1,4 +1,3 @@
-import openai
 import pandas as pd
 import time
 import tkinter as tk
@@ -6,21 +5,13 @@ from tkinter import ttk, filedialog, messagebox
 import threading
 import os
 
-import os
 from openai import OpenAI
 
 
-api_key = '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'
 model = "gpt-4"
 
-# Set your API key here
-client = OpenAI(
-    # defaults to os.environ.get("OPENAI_API_KEY")
-    api_key=api_key,
-)
 
-
-def generate_outline(text):
+def generate_outline(client, text):
     """
     Generates an outline based on the input text.
     """
@@ -69,7 +60,7 @@ def extract_context(sentence, filename):
 #    return response.choices[0].message['content'].strip()
 
 
-def ask_openai(context, sentence, names):
+def ask_openai(client, context, sentence, names):
     """
     Generates an outline based on the input text.
     """
@@ -99,7 +90,7 @@ def warn_about_costs(txt_file_path):
     return True
 
 def main(api_key, txt_file_path, progress_var, status_label, num_of_wanted_requests, message_label):
-    openai.api_key = api_key
+    client = OpenAI(api_key=api_key)
     df = pd.read_csv('quotes.csv')
     responses = []
     names = []
@@ -108,7 +99,7 @@ def main(api_key, txt_file_path, progress_var, status_label, num_of_wanted_reque
     for index, row in df.head(num_of_wanted_requests).iterrows():
         sentence = extract_sentence(row['Start Location'], row['End Location'], txt_file_path)
         context = extract_context(sentence, txt_file_path)
-        response = ask_openai(context, sentence, names)
+        response = ask_openai(client, context, sentence, names)
         responses.append(response)
         if response not in names:
             names.append(response)
@@ -162,6 +153,10 @@ def create_gui():
     ttk.Label(root, text="OpenAI API Key:").pack(pady=10, padx=10)
     api_key_entry = ttk.Entry(root, width=50, show="*")
     api_key_entry.pack(pady=10, padx=10)
+    # Pre-fill from environment variable if available
+    env_api_key = os.environ.get("OPENAI_API_KEY", "")
+    if env_api_key:
+        api_key_entry.insert(0, env_api_key)
 
     ttk.Label(root, text="Text File:").pack(pady=10, padx=10)
     txt_file_entry = ttk.Entry(root, width=40)
