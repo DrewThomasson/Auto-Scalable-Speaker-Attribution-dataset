@@ -19,9 +19,16 @@ Scores are pooled micro F1 for entities, events, quote boundaries, and supersens
 
 **Current finding:** the released BookNLP small pipeline scores higher on every reported task in this English held-out comparison. Gemma 4 12B is the strongest of the tested LLMs on entities, coreference, quote detection, and speaker attribution. No tested model is validated as a high-quality synthetic-label teacher for new languages. These conclusions apply to this dataset, split, and numbered-token/JSON prompt interface.
 
-### Supplementary result: Jev 1.13 on event detection
+### Jev 1.13 event evaluation (hosted decision model)
 
-Jev is a hosted decision model, so it was evaluated separately through its native yes/no-per-token API rather than asked to generate JSON spans. On the same 30-book event test set, it scored **0.2940 micro F1** (P .1799, R .8041; fixed probability threshold .5), below BookNLP small at 0.7036. It answered all 63,625 token questions for a reported OpenRouter cost of $0.5524. This result is interface-adapted and covers event triggers only. See the [Jev protocol and result details](benchmark-results/booknlp-local-llm-2026/JEV_EVENT_SUPPLEMENT.md), [exact prompt template](benchmark-results/booknlp-local-llm-2026/prompts/jev_events.md), and [machine-readable result](benchmark-results/booknlp-local-llm-2026/results/jev_test_events.json).
+This is the result of the recent Jev test. Jev is a hosted decision model, so we used its native yes/no-per-token API rather than asking it to generate JSON spans. It was evaluated against the same held-out 30-book event set and gold labels as BookNLP small.
+
+| System | Event precision | Event recall | Event micro F1 | Documents | Token questions answered | Reported API cost |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| BookNLP small (local run) | 0.7452 | 0.6664 | **0.7036** | 30 | — | — |
+| Jev 1.13 (OpenRouter) | 0.1799 | 0.8041 | **0.2940** | 30 | 63,625 / 63,625 | $0.5524 |
+
+For Jev, event predictions use the fixed probability threshold 0.5. The high recall and low precision mean it labels many non-event tokens as events; its F1 is below BookNLP small. This interface-adapted result covers event triggers only and is not a local-model result. See the [full Jev protocol and result details](benchmark-results/booknlp-local-llm-2026/JEV_EVENT_SUPPLEMENT.md), [exact prompt template](benchmark-results/booknlp-local-llm-2026/prompts/jev_events.md), and [machine-readable result](benchmark-results/booknlp-local-llm-2026/results/jev_test_events.json).
 
 ## Explore the benchmark
 
