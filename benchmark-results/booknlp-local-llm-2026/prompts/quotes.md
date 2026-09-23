@@ -1,0 +1,2 @@
+# quotes v1
+Identify direct speech in the passage. Include typographic dialogue forms such as quotation marks or dialogue dashes, and exclude scare quotes, titles, and mentioned terms. The span includes the quotation's dialogue text and its delimiters when present in the tokens. Return only JSON matching {"quotes":[{"start_token":integer,"end_token":integer}]}; indices are zero-based inclusive. No explanation or extra keys. If none, return an empty list.

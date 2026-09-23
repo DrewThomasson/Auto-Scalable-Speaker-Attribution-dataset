@@ -1,0 +1,4 @@
+# entities v2
+Identify every human or non-human entity mention in this passage. Use exactly these types: PER, FAC, GPE, LOC, VEH, ORG. Include both proper names and common noun phrases; do not include pronouns for this task. The annotation is exhaustive: return each mention separately, including nested mentions within a larger phrase. For example, if a phrase contains a person and that person's facility, output both spans. Do not replace a span with a whole sentence or include events. Use the shortest complete noun phrase that identifies each entity.
+
+Return only JSON matching {"entities":[{"start_token":integer,"end_token":integer,"type":"PER|FAC|GPE|LOC|VEH|ORG"}]}. Token indices are zero-based and inclusive. Include no explanation or extra keys. If there are no entities, return an empty list.

@@ -1,106 +1,37 @@
-\# Auto-Scalable Speaker Attribution Dataset
+# Auto-Scalable Speaker Attribution Dataset
 
-This is my attempt at implementing a method for scaling speaker attribution datasets for literature using GPT or any other capable Large Language Model (LLM).
+This repository explores scalable literary dialogue detection and speaker attribution. Its original prototypes, model experiments, and data-generation tools are preserved in their existing folders; an index to those earlier materials is in [`archive/legacy/README.md`](archive/legacy/README.md).
 
-The hope for this is to use this methology to create a speaker attribution dataset for nearly all books found in project gutenburg
+## New benchmark: local LLMs vs. BookNLP
 
-## How to run
+The completed [BookNLP local LLM benchmark](benchmark-results/booknlp-local-llm-2026/README.md) evaluates three quantized local instruction models and the released BookNLP small pipeline against human annotations. It covers entity typing, literary events, coreference, quotation boundaries, quotation speakers, and supersenses. Each model receives an isolated task prompt and unannotated numbered tokens; model output is schema-checked JSON, and malformed output is retained as a failed prediction rather than omitted.
 
-1. Install the `openai` and `pandas` Python packages.
-2. Run `python run_gui.py`.
-3. Enter your OpenAI API key in the masked key field. If `OPENAI_API_KEY` is set in your environment, the field is pre-filled automatically.
+### Held-out test scores
 
-Never commit API keys to the repository. Local `.env` files are ignored, but the application does not load them automatically.
+| System | Entities F1 | Events F1 | Coreference CoNLL F1 | Quotes F1 | Joint speaker B³ F1 | Supersenses F1 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| BookNLP small (local run) | **0.7409** | **0.7036** | **0.6604** | **0.7833** | **0.4216** | **0.7646** |
+| Qwen3.5 4B, Q4_K_M | 0.1193 | 0.1658 | 0.0632 | 0.2765 | 0.1790 | 0.1741 |
+| Qwen3.5 9B, Q4_K_M | 0.1258 | 0.0621 | 0.0858 | 0.4246 | 0.1418 | 0.1371 |
+| Gemma 4 12B, Q4_K_M | 0.2342 | 0.1557 | 0.2435 | 0.6990 | 0.2996 | 0.2116 |
 
+Scores are pooled micro F1 for entities, events, quote boundaries, and supersenses; official CoNLL F1 for coreference; and joint quote/speaker B³ macro F1 for speakers. Test sizes by task are 10 / 30 / 100 / 10 / 10 / 35 documents, respectively. Published BookNLP numbers use different protocols and are reported separately in the benchmark documentation.
 
-<img width="1019" alt="Screenshot 2023-12-04 at 5 06 55 PM" src="https://github.com/DrewThomasson/Auto-Scalable-Speaker-Attribution-dataset/assets/126999465/f93fb7b1-c741-4540-a647-65d1f8a49e61">
+**Current finding:** the released BookNLP small pipeline scores higher on every reported task in this English held-out comparison. Gemma 4 12B is the strongest of the tested LLMs on entities, coreference, quote detection, and speaker attribution. No tested model is validated as a high-quality synthetic-label teacher for new languages. These conclusions apply to this dataset, split, and numbered-token/JSON prompt interface.
 
-<img width="806" alt="Screenshot 2023-12-04 at 5 07 36 PM" src="https://github.com/DrewThomasson/Auto-Scalable-Speaker-Attribution-dataset/assets/126999465/eb2157c9-ff21-4676-8e93-916cba276149">
+## Explore the benchmark
 
+- [Benchmark landing page, methodology, limitations, and reproduction notes](benchmark-results/booknlp-local-llm-2026/README.md)
+- [Detailed scores and coverage, including invalid-output counts](benchmark-results/booknlp-local-llm-2026/RESULTS.md)
+- [Exact task prompt templates](benchmark-results/booknlp-local-llm-2026/prompts/)
+- [Machine-readable test metrics (CSV and JSON)](benchmark-results/booknlp-local-llm-2026/results/)
+- [Dataset split manifest and measured model/runtime inventory](benchmark-results/booknlp-local-llm-2026/metadata/)
+- [Previous GPT-4/manual review and model-training experiments](archive/legacy/README.md)
 
-## manual_results_checker.py
-<img width="386" alt="Screenshot 2023-12-04 at 5 03 13 PM" src="https://github.com/DrewThomasson/Auto-Scalable-Speaker-Attribution-dataset/assets/126999465/388cc144-b9df-4e10-b6ae-5ee9431eae53">
+The benchmark export contains aggregate metrics and prompt/configuration metadata. It does not redistribute LitBank/SemCor source data, book text, human gold annotations, or per-document model generations. Those licensed evaluation assets and detailed local artifacts are kept in the separate local experiment folder.
 
--once you click the "save changes" button itll show you the accuracy rating in a popup like so:
-<img width="259" alt="Screenshot 2023-12-04 at 5 40 00 PM" src="https://github.com/DrewThomasson/Auto-Scalable-Speaker-Attribution-dataset/assets/126999465/84d87a71-6e9e-41c6-8856-54b240c1b8a6">
+## Original project
 
+The original GUI and scripts remain available: start with [`run_gui.py`](run_gui.py), [`speaker_find_attribute.py`](speaker_find_attribute.py), and [`manual_results_checker.py`](manual_results_checker.py). The earlier one-book GPT-4 review is an informal historical experiment, not a score directly comparable to the held-out benchmark.
 
-- This python script will give you a easy to use gui to manually check the output results of the speaker attribution via LLM
-- give it the refrence txt file and then give it the quotes.csv file that was generated after running the speaker_find_attribute.py
-
-## Test Results
-
-For the first test, I used a snippet from "Guardians of Ga'Hoole" in the `ebooks` folder. The results are impressive:
-
-- GPT-4 achieved a remarkable 98.33% accuracy rate for speaker attributio for the first run.
-- On the second run of the same piece of text GPT achieved 96.67% accuracy rating.
-- given this it appears to still have a arguable very high accuracy rate these could be imporived through improved prompting or increasing the context length given to the LLM
-- the second reults can be found under the file "quotes_updated.csv" in the ebooks folder in this repo
-
-## Speaker Attribution Results
-
-I meticulously reviewed each speaker attribution assigned by GPT-4 and categorized the results for all 60 quotes found in the snippet from "Guardians of Ga'Hoole" as follows:
-
-- **True:** Correct attribution
-- **False:** Incorrect attribution
-- **True/Incorrect Quotation:** The quote may not have been said by a character, but if assigned, this would be the correct answer.
-
-### Attribution Breakdown
-
-- True
-- True/Incorrect Quotation
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- False
-- True/Incorrect Quotation
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
-- True
+Never commit API keys or credentials.

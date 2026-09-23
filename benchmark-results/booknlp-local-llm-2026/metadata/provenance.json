@@ -1,0 +1,60 @@
+{
+  "benchmark_completed": "2026-09-23",
+  "runtime": "Ollama 0.34.3",
+  "generation": {
+    "temperature": 0,
+    "thinking": "disabled",
+    "context_tokens": 32768,
+    "max_output_tokens": 16384,
+    "one_task_per_request": true,
+    "whole_document_no_chunking": true
+  },
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 3060",
+    "vram_mib": 12288,
+    "system_ram_gib": 32
+  },
+  "dataset_sources": [
+    {
+      "name": "LitBank",
+      "repository": "https://github.com/dbamman/litbank",
+      "commit": "3e50db0ffc033d7ccbb94f4d88f6b99210328ed8"
+    },
+    {
+      "name": "NAACL 2019 literary entities",
+      "repository": "https://github.com/dbamman/NAACL2019-literary-entities",
+      "commit": "403ddf669824be22464e432791e5242d5d049c2f"
+    },
+    {
+      "name": "ACL 2019 literary events",
+      "repository": "https://github.com/dbamman/ACL2019-literary-events",
+      "commit": "6629d35902226af7c7c0cea8972007232d06e392"
+    },
+    {
+      "name": "LREC 2020 literary coreference",
+      "repository": "https://github.com/dbamman/lrec2020-coref",
+      "commit": "e30de53743d36d1ea2c9e7292c69477fa332713c"
+    },
+    {
+      "name": "CoNLL reference coreference scorer",
+      "repository": "https://github.com/conll/reference-coreference-scorers",
+      "commit": "f49f3f8a0e1cdc5ceba7c2a33013897369df5543"
+    },
+    {
+      "name": "SemCor",
+      "version": "3.0",
+      "source": "NLTK corpus distribution"
+    },
+    {
+      "name": "Princeton WordNet",
+      "version": "3.0"
+    }
+  ],
+  "policy": {
+    "gold_in_prompt": false,
+    "raw_book_text_in_repository": false,
+    "per_document_model_outputs_in_repository": false,
+    "invalid_outputs_retained_as_empty_predictions": true
+  },
+  "note": "Consult the upstream dataset and model terms before reuse; this aggregate export does not redistribute source corpus contents."
+}

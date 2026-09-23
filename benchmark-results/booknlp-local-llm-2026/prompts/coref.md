@@ -1,0 +1,6 @@
+# coref v2
++Identify referential entity mentions in this passage and cluster mentions that refer to the same person, place, organization, vehicle, facility, or other entity. A mention is a referring noun phrase or personal pronoun. It is not a sentence, clause, event, or description of an event. Select the shortest complete noun phrase that refers to an entity; include nested noun phrases as separate mentions. Include proper names, common nouns, and personal pronouns, including singleton mentions. Do not include verbs, whole sentences, or narrative clauses as mentions.
++
++Use only these entity types: PER, FAC, GPE, LOC, VEH, ORG. Use simple cluster IDs such as c1, c2, c3. All mentions of the same entity must share the same cluster ID. Cluster IDs must contain only an ID; never put mention text, a JSON object, or a sentence in the cluster field. Do not merge entities just because they are similar.
++
++Return only JSON matching {"mentions":[{"start_token":integer,"end_token":integer,"type":"PER|FAC|GPE|LOC|VEH|ORG","cluster":"c1"}]}. Token indices are zero-based and inclusive. Every span must identify a referring noun phrase or pronoun visible in the numbered tokens. No explanation or extra keys. If there are no mentions, return an empty list.

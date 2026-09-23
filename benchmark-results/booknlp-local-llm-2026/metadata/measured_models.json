@@ -1,0 +1,41 @@
+{
+  "hardware": "NVIDIA GeForce RTX 3060 (12,288 MiB VRAM); 32 GiB system RAM",
+  "models": [
+    {
+      "model": "qwen3.5:4b",
+      "family": "Qwen3.5",
+      "parameters_reported": "4.66B",
+      "quantization": "Q4_K_M",
+      "runtime": "Ollama 0.34.3",
+      "model_digest": "2a654d98e6fb",
+      "context": "32768",
+      "max_output_tokens": "16384",
+      "temperature": "0",
+      "reasoning": "disabled"
+    },
+    {
+      "model": "qwen3.5:9b",
+      "family": "Qwen3.5",
+      "parameters_reported": "9.65B",
+      "quantization": "Q4_K_M",
+      "runtime": "Ollama 0.34.3",
+      "model_digest": "sha256-dec52a44569a2a25341c4e4d3fee25846eed4f6f0b936278e3a3c900bb99d37c",
+      "context": "32768",
+      "max_output_tokens": "16384",
+      "temperature": "0",
+      "reasoning": "disabled"
+    },
+    {
+      "model": "gemma4:12b",
+      "family": "Gemma 4",
+      "parameters_reported": "11.91B",
+      "quantization": "Q4_K_M",
+      "runtime": "Ollama 0.34.3",
+      "model_digest": "4eb23ef187e2",
+      "context": "32768",
+      "max_output_tokens": "16384",
+      "temperature": "0",
+      "reasoning": "disabled"
+    }
+  ]
+}

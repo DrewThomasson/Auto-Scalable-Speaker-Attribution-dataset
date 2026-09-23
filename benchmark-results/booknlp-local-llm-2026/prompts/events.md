@@ -1,0 +1,2 @@
+# events v1
+Find event mentions depicted as actually taking place, with specific participants at a specific time (asserted realis). Exclude hypotheticals, future events, counterfactuals, and narrator summaries that do not depict a specific event. Annotate the lexical trigger token as a one-token span. Return only JSON matching {"events":[{"start_token":integer,"end_token":integer}]}; indices are zero-based inclusive. Include no explanation or extra keys. If none, return an empty list.
