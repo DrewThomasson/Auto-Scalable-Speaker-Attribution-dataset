@@ -1,0 +1,218 @@
+{
+  "benchmark_version": "booknlp-local-llm-2026",
+  "model": "deepseek/deepseek-v4.1-flash",
+  "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+  "provider_pinned": "DeepInfra",
+  "split": "test",
+  "tasks": [
+    "entities",
+    "events",
+    "coref",
+    "quotes",
+    "speakers",
+    "supersenses"
+  ],
+  "expected_documents": {
+    "entities": 10,
+    "events": 30,
+    "coref": 100,
+    "quotes": 10,
+    "speakers": 10,
+    "supersenses": 35
+  },
+  "temperature": 0,
+  "reasoning": {
+    "effort": "none",
+    "include_reasoning": false
+  },
+  "max_output_tokens": 16384,
+  "legacy_context_setting": 32768,
+  "provider_context_length": 1048576,
+  "context_limit_note": "OpenRouter does not expose an Ollama-style num_ctx setting; the pinned endpoint advertises its provider context length. The complete unchunked prompts are sent as in the baseline.",
+  "structured_output": "response_format=json_schema, strict=true; routed only to provider endpoint supporting required parameters",
+  "prompt_serialization": "exact frozen local prompt + newline + blank line + PASSAGE TOKENS header + every [zero_based_id] token, matching benchmark.prompt_for",
+  "split_protocols": {
+    "entities": {
+      "protocol": "official author 80/10/10 document split",
+      "split_file": "external/NAACL2019-literary-entities/data/litbank/test.ids",
+      "train_documents": 80,
+      "selected_documents": 10
+    },
+    "events": {
+      "protocol": "official author 80/10/10 document split",
+      "split_file": "external/ACL2019-literary-events/data/test.ids",
+      "train_documents": 60,
+      "selected_documents": 30
+    },
+    "coref": {
+      "protocol": "official 10-fold CV test-fold union (each book held out once)",
+      "split_file": "external/lrec2020-coref/data/litbank_tenfold_splits",
+      "selected_documents": 100
+    },
+    "quotes": {
+      "protocol": "fixed SHA-256 10% document holdout",
+      "split_file": "datasets/normalized/splits.json",
+      "selected_documents": 10
+    },
+    "speakers": {
+      "protocol": "fixed SHA-256 10% document holdout",
+      "split_file": "datasets/normalized/splits.json",
+      "selected_documents": 10
+    },
+    "supersenses": {
+      "protocol": "fixed SHA-256 10% document holdout",
+      "split_file": "datasets/normalized/splits.json",
+      "selected_documents": 35
+    }
+  },
+  "started_at_utc": "2026-09-23T18:19:47.884268+00:00",
+  "completed_at_utc": "2026-09-23T20:17:26.964821+00:00",
+  "budget_limit_usd": 5.0,
+  "requests_attempted": 195,
+  "requests_with_responses": 195,
+  "successful_schema_valid_responses": 188,
+  "schema_invalid_or_failed_responses": 7,
+  "prompt_tokens": 2347449.0,
+  "completion_tokens": 737186.0,
+  "cached_input_tokens": 33536.0,
+  "total_tokens": 3084635.0,
+  "reported_cost_usd": 0.6337067911999998,
+  "average_reported_cost_per_request_usd": 0.0032497784164102557,
+  "latency_seconds": 6981.4179405377945,
+  "provider_counts": {
+    "DeepInfra": 195
+  },
+  "resolved_model_counts": {
+    "deepseek/deepseek-v4.1-flash": 195
+  },
+  "smoke_preflight": {
+    "requests_attempted": 1,
+    "requests_with_responses": 1,
+    "successful_schema_valid_responses": 1,
+    "schema_invalid_or_failed_responses": 0,
+    "prompt_tokens": 12077.0,
+    "completion_tokens": 1270.0,
+    "cached_input_tokens": 0.0,
+    "total_tokens": 13347.0,
+    "reported_cost_usd": 0.00222418,
+    "provider_counts": {
+      "DeepInfra": 1
+    },
+    "resolved_model_counts": {
+      "deepseek/deepseek-v4.1-flash": 1
+    }
+  },
+  "api_reported_grand_total_cost_including_smoke_usd": 0.6359309711999999,
+  "task_usage": {
+    "entities": {
+      "documents": 10,
+      "schema_valid": 10,
+      "reported_usage": {
+        "prompt_tokens": 116603.0,
+        "completion_tokens": 7626.0,
+        "total_tokens": 124229.0,
+        "cost": 0.01952734
+      },
+      "cache_read_tokens": 0.0,
+      "mean_latency_seconds": 7.415012757619843
+    },
+    "events": {
+      "documents": 30,
+      "schema_valid": 29,
+      "reported_usage": {
+        "prompt_tokens": 352543.0,
+        "completion_tokens": 28985.0,
+        "total_tokens": 381528.0,
+        "cost": 0.06152972000000002
+      },
+      "cache_read_tokens": 0.0,
+      "mean_latency_seconds": 12.261012675225114
+    },
+    "coref": {
+      "documents": 100,
+      "schema_valid": 100,
+      "reported_usage": {
+        "prompt_tokens": 1183094.0,
+        "completion_tokens": 260723.0,
+        "total_tokens": 1443817.0,
+        "cost": 0.27172986959999995
+      },
+      "cache_read_tokens": 25088.0,
+      "mean_latency_seconds": 22.997717164725763
+    },
+    "quotes": {
+      "documents": 10,
+      "schema_valid": 10,
+      "reported_usage": {
+        "prompt_tokens": 116960.0,
+        "completion_tokens": 2229.0,
+        "total_tokens": 119189.0,
+        "cost": 0.01731058
+      },
+      "cache_read_tokens": 0.0,
+      "mean_latency_seconds": 3.3732343390001915
+    },
+    "speakers": {
+      "documents": 10,
+      "schema_valid": 10,
+      "reported_usage": {
+        "prompt_tokens": 117270.0,
+        "completion_tokens": 6136.0,
+        "total_tokens": 123406.0,
+        "cost": 0.01899492
+      },
+      "cache_read_tokens": 0.0,
+      "mean_latency_seconds": 9.456711036304478
+    },
+    "supersenses": {
+      "documents": 35,
+      "schema_valid": 29,
+      "reported_usage": {
+        "prompt_tokens": 460979.0,
+        "completion_tokens": 431487.0,
+        "total_tokens": 892466.0,
+        "cost": 0.24461436160000002
+      },
+      "cache_read_tokens": 8448.0,
+      "mean_latency_seconds": 117.46760749940627
+    }
+  },
+  "prompt_templates": {
+    "entities": {
+      "version": "entities v2",
+      "path": "benchmark-results/booknlp-local-llm-2026/prompts/entities.md",
+      "sha256": "9fb9acd3a4e6ed9bb7aea6c5ff9f7e56d97fe85c55a83ba0b13350376650ec30"
+    },
+    "events": {
+      "version": "events v1",
+      "path": "benchmark-results/booknlp-local-llm-2026/prompts/events.md",
+      "sha256": "0f5cb10ada8335d8db92dc693060fe111d331d66a8b0d56b374ac5fe19b94c15"
+    },
+    "coref": {
+      "version": "coref v2",
+      "path": "benchmark-results/booknlp-local-llm-2026/prompts/coref.md",
+      "sha256": "772aa65a54cb51d7a13e3fe6d61ce02871fa5e86b1f7537dcd66b5c247c7a908"
+    },
+    "quotes": {
+      "version": "quotes v1",
+      "path": "benchmark-results/booknlp-local-llm-2026/prompts/quotes.md",
+      "sha256": "5f44adcf33144fbbc667aacfcfc20a0db170921cd83c44ff585e2ef86012c52b"
+    },
+    "speakers": {
+      "version": "speakers v1",
+      "path": "benchmark-results/booknlp-local-llm-2026/prompts/speakers.md",
+      "sha256": "39c8737cf333b1509d932e0cdc5d22bbfed4ffa64aba2468894bde83cb4b385a"
+    },
+    "supersenses": {
+      "version": "supersenses v1",
+      "path": "benchmark-results/booknlp-local-llm-2026/prompts/supersenses.md",
+      "sha256": "37fda86ce95ea3b785461b920b09a033311f702e3b3b1c4511d73259bba5e5e1"
+    }
+  },
+  "software_versions": {
+    "python": "3.10.20",
+    "benchmark_scoring": "private local booknlp_experiment package, byte-compared prompt templates to this repository",
+    "reference_coreference_scorer": "v8.01 (commit f49f3f8)",
+    "public_repository_base_commit": "11ae16c8ab6fec2c48eb3c0d19ae5956ed6693ed"
+  }
+}

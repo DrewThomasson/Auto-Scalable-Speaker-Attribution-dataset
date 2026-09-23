@@ -1,0 +1,82 @@
+{
+  "checked_at_utc": "2026-09-23T18:19:47.876353+00:00",
+  "model": {
+    "id": "deepseek/deepseek-v4.1-flash",
+    "name": "DeepSeek: DeepSeek V4.1 Flash",
+    "context_length": 1048576,
+    "architecture": {
+      "modality": "text+image->text",
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "output_modalities": [
+        "text"
+      ],
+      "tokenizer": "DeepSeek",
+      "instruct_type": null
+    },
+    "pricing": {
+      "prompt": "0.0000001",
+      "completion": "0.0000005",
+      "input_cache_read": "0.00000001"
+    },
+    "supported_parameters": [
+      "frequency_penalty",
+      "include_reasoning",
+      "logit_bias",
+      "logprobs",
+      "max_tokens",
+      "min_p",
+      "presence_penalty",
+      "reasoning",
+      "reasoning_effort",
+      "repetition_penalty",
+      "response_format",
+      "seed",
+      "stop",
+      "structured_outputs",
+      "temperature",
+      "tool_choice",
+      "tools",
+      "top_k",
+      "top_logprobs",
+      "top_p"
+    ],
+    "created": 1789021285
+  },
+  "selected_provider_endpoint": {
+    "provider_name": "DeepInfra",
+    "name": "DeepInfra | deepseek/deepseek-v4.1-flash-20260910",
+    "tag": "deepinfra/fp8",
+    "status": 0,
+    "context_length": 1048576,
+    "max_completion_tokens": 131072,
+    "pricing": {
+      "prompt": "0.00000014",
+      "completion": "0.00000042",
+      "input_cache_read": "0.0000000042",
+      "discount": 0.3
+    },
+    "supported_parameters": [
+      "reasoning",
+      "include_reasoning",
+      "max_tokens",
+      "temperature",
+      "top_p",
+      "stop",
+      "frequency_penalty",
+      "presence_penalty",
+      "repetition_penalty",
+      "top_k",
+      "seed",
+      "min_p",
+      "logit_bias",
+      "structured_outputs",
+      "tools",
+      "tool_choice",
+      "response_format",
+      "reasoning_effort"
+    ]
+  }
+}

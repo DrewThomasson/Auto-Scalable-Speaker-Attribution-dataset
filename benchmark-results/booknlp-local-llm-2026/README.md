@@ -2,7 +2,7 @@
 
 **Completed local benchmark · 23 September 2026**
 
-This is an experimental comparison of local instruction models against human-created literary annotations, with the released BookNLP small pipeline run on the same task cohorts. It is intended to answer whether these local models are ready to supply synthetic labels for a future student model. It does not train that student and does not establish performance on new languages.
+This is an experimental comparison of local instruction models against human-created literary annotations, with the released BookNLP small pipeline run on the same task cohorts. A separately measured hosted DeepSeek V4.1 Flash extension now uses the exact same frozen cohorts, prompts, and schemas; see its [full protocol and report](../hosted-deepseek-v4.1-flash/README.md). These evaluations are intended to assess possible synthetic-label teachers. They do not train a student model or establish performance on new languages.
 
 ## Result at a glance
 
@@ -12,6 +12,7 @@ This is an experimental comparison of local instruction models against human-cre
 | Qwen3.5 4B | 4.66B | Q4_K_M | 0.1193 | 0.1658 | 0.0632 | 0.2765 | 0.1790 | 0.1741 |
 | Qwen3.5 9B | 9.65B | Q4_K_M | 0.1258 | 0.0621 | 0.0858 | 0.4246 | 0.1418 | 0.1371 |
 | Gemma 4 12B | 11.91B | Q4_K_M | 0.2342 | 0.1557 | 0.2435 | 0.6990 | 0.2996 | 0.2116 |
+| DeepSeek V4.1 Flash, hosted | Not reported | DeepInfra fp8 | 0.3446 | 0.3521 | 0.3099 | 0.7646 | 0.2585 | 0.5380 |
 
 Every row above is a measured result on the full test cohort for the corresponding task. Test cohort sizes in column order are **10, 30, 100, 10, 10, and 35 documents**. These are distinct gold datasets and thus have different test sizes. The score aggregation is pooled micro F1 for entities, events, quote boundaries, and supersenses; official CoNLL F1 for coreference; and joint quote/speaker B³ macro F1 for speakers.
 
@@ -78,7 +79,7 @@ The score meanings, per-task precision/recall, full coverage table, schema-valid
 
 ## Interpretation and limitations
 
-BookNLP small exceeds every tested local model on these full test cohorts. Gemma 4 12B is the strongest LLM for entities, coreference, quotes, and joint speaker attribution; it remains well behind BookNLP on those tasks. It also has the highest LLM supersense score, while Qwen 4B is the strongest Qwen model on events, speaker joint score, and supersenses. Qwen 9B is faster than Gemma and improves over Qwen 4B on entity and quote F1, but parameter count alone did not predict quality.
+BookNLP small exceeds every tested LLM, including the hosted DeepSeek, on these full test cohorts. DeepSeek is the strongest tested LLM for entities, events, coreference, quotes, and supersenses. Gemma 4 12B retains the best joint speaker attribution score among the LLMs. DeepSeek's quote F1 is near BookNLP's, but its joint speaker B³ remains weaker than Gemma's. Qwen 9B is faster than Gemma and improves over Qwen 4B on entity and quote F1, but parameter count alone did not predict quality.
 
 The aggregate evidence does not yet support using any tested model as an unattended, large-scale synthetic-data teacher. In particular, coreference F1 and output validity are weak, and this study contains no multilingual gold set or downstream student training. A future compact-label or multi-pass interface would be a new experiment, with its own frozen prompts and held-out evaluation.
 
