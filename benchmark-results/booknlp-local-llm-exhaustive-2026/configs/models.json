@@ -1,0 +1,16 @@
+{
+  "backend": "Ollama local HTTP API",
+  "runtime_version": "0.34.3",
+  "hardware": "NVIDIA GeForce RTX 3060 12 GB; 32 GiB system RAM",
+  "settings": {"temperature": 0, "thinking": false, "task_context_tokens": 8192, "atomic_candidates_per_request": 1, "votes": 2, "third_vote": "only when first two labels disagree; wider +/-48 token context", "other_sampler_options_inherited_from_model_modelfile": true},
+  "runtime_model_defaults": {
+    "qwen3.5_family": {"top_k":20,"top_p":0.95,"presence_penalty":1.5,"modelfile_temperature":1,"request_temperature":0},
+    "gemma4_family": {"top_k":64,"top_p":0.95,"modelfile_temperature":1,"request_temperature":0}
+  },
+  "models": [
+    {"tag":"qwen3.5:0.8b", "family":"Qwen3.5", "parameters":"873.44M", "quantization":"Q8_0", "reported_context_tokens":262144, "license":"Apache-2.0", "digest":"f3817196d142", "ollama_blob_sha256":"afb707b6b8fac6e475acc42bc8380fc0b8d2e0e4190be5a969fbf62fcc897db5", "role":"new sub-1B size point", "local_only":true},
+    {"tag":"qwen3.5:4b", "family":"Qwen3.5", "parameters":"4.66B", "quantization":"Q4_K_M", "digest":"2a654d98e6fb", "role":"existing benchmark model", "local_only":true},
+    {"tag":"qwen3.5:9b", "family":"Qwen3.5", "parameters":"9.65B", "quantization":"Q4_K_M", "digest":"6488c96fa5fa", "role":"existing benchmark model", "local_only":true},
+    {"tag":"gemma4:12b", "family":"Gemma 4", "parameters":"11.91B", "quantization":"Q4_K_M", "digest":"4eb23ef187e2", "role":"existing benchmark model", "local_only":true}
+  ]
+}

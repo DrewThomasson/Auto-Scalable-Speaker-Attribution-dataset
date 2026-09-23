@@ -1,0 +1,14 @@
+{
+  "captured_at": "2026-09-23",
+  "dataset_sources": {
+    "external/NAACL2019-literary-entities": "403ddf669824be22464e432791e5242d5d049c2f",
+    "external/ACL2019-literary-events": "6629d35902226af7c7c0cea8972007232d06e392",
+    "external/lrec2020-coref": "e30de53743d36d1ea2c9e7292c69477fa332713c",
+    "external/booknlp": "3d900fc2224e55960c3363826ae28539b77b4204",
+    "external/reference-coreference-scorers": "f49f3f8a0e1cdc5ceba7c2a33013897369df5543"
+  },
+  "split_manifest_sha256": "82d2d46cdda1b5b49bec545d7b99d3bff9d2ad6a44afcbfbcfe2f9062b5b1832",
+  "baseline_test_results_sha256": "371ac8ff9a81aa6bde672665d5bf829a3f11a0129e677b59b1acb7b9619b6a72",
+  "gold_prompts": false,
+  "gold_assets_not_in_repository": true
+}

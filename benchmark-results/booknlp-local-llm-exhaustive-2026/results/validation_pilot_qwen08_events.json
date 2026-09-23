@@ -1,0 +1,127 @@
+{
+  "experiment": "exhaustive-token-enumeration-v1",
+  "split": "validation",
+  "status": "one-document development pilot; not held-out test; not a stable quality estimate",
+  "model": "qwen3.5:0.8b",
+  "parameters": "873.44M",
+  "quantization": "Q8_0",
+  "model_digest": "f3817196d142eaf72ce79dfebe53dcb20bd21da87ce13e138a8f8e10a866b3a4",
+  "task": "events",
+  "documents": 1,
+  "expected_validation_documents": 10,
+  "document_ids": [
+    "74_the_adventures_of_tom_sawyer"
+  ],
+  "tokens": 2000,
+  "runtime_settings": {
+    "ollama": "0.34.3",
+    "temperature": 0,
+    "thinking": false,
+    "context_tokens": 8192,
+    "candidate_tokens_per_request": 1,
+    "num_predict_per_atomic_call": 128
+  },
+  "metrics": {
+    "precision": 0.03895004233700254,
+    "recall": 0.5897435897435898,
+    "f1": 0.07307386814932487,
+    "matched": 46,
+    "predicted": 1181,
+    "gold": 78
+  },
+  "ablation_metrics": {
+    "pass1": {
+      "pooled_micro": {
+        "precision": 0.04055220017256255,
+        "recall": 0.6025641025641025,
+        "f1": 0.07599029911075182,
+        "matched": 47,
+        "predicted": 1159,
+        "gold": 78
+      }
+    },
+    "two_pass_vote": {
+      "pooled_micro": {
+        "precision": 0.04405286343612335,
+        "recall": 0.5128205128205128,
+        "f1": 0.08113590263691683,
+        "matched": 40,
+        "predicted": 908,
+        "gold": 78
+      }
+    },
+    "final": {
+      "pooled_micro": {
+        "precision": 0.03895004233700254,
+        "recall": 0.5897435897435898,
+        "f1": 0.07307386814932487,
+        "matched": 46,
+        "predicted": 1181,
+        "gold": 78
+      }
+    }
+  },
+  "teacher_mode": {
+    "available": true,
+    "confidence_source": "vote agreement and/or local model confidence; uncalibrated",
+    "scope": "exact task labels",
+    "points": [
+      {
+        "fraction_of_model_predictions_retained": 0.25,
+        "selected_predictions": 295,
+        "available_predictions": 1181,
+        "precision": 0.0576271186440678,
+        "gold_recall": 0.21794871794871795,
+        "f1": 0.09115281501340483
+      },
+      {
+        "fraction_of_model_predictions_retained": 0.5,
+        "selected_predictions": 590,
+        "available_predictions": 1181,
+        "precision": 0.05593220338983051,
+        "gold_recall": 0.4230769230769231,
+        "f1": 0.09880239520958083
+      },
+      {
+        "fraction_of_model_predictions_retained": 0.75,
+        "selected_predictions": 886,
+        "available_predictions": 1181,
+        "precision": 0.045146726862302484,
+        "gold_recall": 0.5128205128205128,
+        "f1": 0.08298755186721991
+      },
+      {
+        "fraction_of_model_predictions_retained": 0.9,
+        "selected_predictions": 1063,
+        "available_predictions": 1181,
+        "precision": 0.041392285983066796,
+        "gold_recall": 0.5641025641025641,
+        "f1": 0.077125328659071
+      },
+      {
+        "fraction_of_model_predictions_retained": 1.0,
+        "selected_predictions": 1181,
+        "available_predictions": 1181,
+        "precision": 0.03895004233700254,
+        "gold_recall": 0.5897435897435898,
+        "f1": 0.07307386814932487
+      }
+    ]
+  },
+  "inference": {
+    "calls": 4011,
+    "cache_hits": 4011,
+    "prompt_tokens": 2525619,
+    "output_tokens": 36484,
+    "output_tokens_per_model_second": 25.702349500951442,
+    "model_wall_seconds": 1419.4811255931854,
+    "wall_seconds": 1419.4811255931854,
+    "latest_process_wall_seconds": 0.6230411529541016,
+    "invalid_batches": 0,
+    "invalid_followups": 0,
+    "peak_gpu_used_mib": 1707,
+    "peak_system_ram_used_mib": 16122
+  },
+  "gold_in_prompts": false,
+  "note": "A single dev excerpt was run to validate per-token inference, caching, scoring, ablation layers, and selective coverage. Do not compare this one-document result with held-out test metrics or tune the final protocol based on it."
+}
