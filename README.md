@@ -19,6 +19,10 @@ Scores are pooled micro F1 for entities, events, quote boundaries, and supersens
 
 **Current finding:** the released BookNLP small pipeline scores higher on every reported task in this English held-out comparison. Gemma 4 12B is the strongest of the tested LLMs on entities, coreference, quote detection, and speaker attribution. No tested model is validated as a high-quality synthetic-label teacher for new languages. These conclusions apply to this dataset, split, and numbered-token/JSON prompt interface.
 
+### Supplementary result: Jev 1.13 on event detection
+
+Jev is a hosted decision model, so it was evaluated separately through its native yes/no-per-token API rather than asked to generate JSON spans. On the same 30-book event test set, it scored **0.2940 micro F1** (P .1799, R .8041; fixed probability threshold .5), below BookNLP small at 0.7036. It answered all 63,625 token questions for a reported OpenRouter cost of $0.5524. This result is interface-adapted and covers event triggers only. See the [Jev protocol and result details](benchmark-results/booknlp-local-llm-2026/JEV_EVENT_SUPPLEMENT.md), [exact prompt template](benchmark-results/booknlp-local-llm-2026/prompts/jev_events.md), and [machine-readable result](benchmark-results/booknlp-local-llm-2026/results/jev_test_events.json).
+
 ## Explore the benchmark
 
 - [Benchmark landing page, methodology, limitations, and reproduction notes](benchmark-results/booknlp-local-llm-2026/README.md)

@@ -1,0 +1,500 @@
+{
+  "model": "typesafe/jev-1.13",
+  "resolved_model": "typesafe/jev-1.13-20260917",
+  "api": "https://openrouter.ai/api/alpha/decisions",
+  "provider": "TypeSafe via OpenRouter Decisions API",
+  "task": "events",
+  "split": "test",
+  "documents": 30,
+  "split_protocol": {
+    "protocol": "official author 80/10/10 document split",
+    "split_file": "external/ACL2019-literary-events/data/test.ids",
+    "train_documents": 60,
+    "selected_documents": 30
+  },
+  "prompt_version": "jev-event-token-noul-v1",
+  "decision_primitive": "noul",
+  "threshold": 0.5,
+  "batch_size": 128,
+  "context_strategy": "full document as numbered-token state, candidate token IDs asked in parallel questions; no gold in request",
+  "candidate_tokens": 63625,
+  "answered_tokens": 63625,
+  "answer_coverage": 1.0,
+  "failed_batches": 0,
+  "macro_metrics": {
+    "precision": 0.17899781202692233,
+    "recall": 0.8011966107712721,
+    "f1": 0.28651970901093676
+  },
+  "pooled_metrics": {
+    "precision": 0.17990074441687345,
+    "recall": 0.8040665434380776,
+    "f1": 0.294018249408584,
+    "gold": 2164,
+    "predicted": 9672,
+    "matched": 1740
+  },
+  "reported_api_input_tokens": 13152772,
+  "reported_api_cost_usd": 0.5524164239999996,
+  "api_calls": 510,
+  "summed_api_latency_seconds": 269.769868850708,
+  "mean_api_latency_seconds": 0.528960527158251,
+  "max_request_input_tokens": 30920,
+  "per_document": {
+    "1023_bleak_house": {
+      "doc_id": "1023_bleak_house",
+      "tokens": 2269,
+      "answered_tokens": 2269,
+      "candidate_tokens": 2269,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.13953488372093023,
+        "recall": 0.19672131147540983,
+        "f1": 0.16326530612244897,
+        "gold": 61,
+        "predicted": 86,
+        "matched": 12
+      }
+    },
+    "1064_the_masque_of_the_red_death": {
+      "doc_id": "1064_the_masque_of_the_red_death",
+      "tokens": 2094,
+      "answered_tokens": 2094,
+      "candidate_tokens": 2094,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.20496894409937888,
+        "recall": 0.6055045871559633,
+        "f1": 0.30626450116009285,
+        "gold": 109,
+        "predicted": 322,
+        "matched": 66
+      }
+    },
+    "110_tess_of_the_durbervilles_a_pure_woman": {
+      "doc_id": "110_tess_of_the_durbervilles_a_pure_woman",
+      "tokens": 2002,
+      "answered_tokens": 2002,
+      "candidate_tokens": 2002,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.22707423580786026,
+        "recall": 0.8125,
+        "f1": 0.35494880546075086,
+        "gold": 64,
+        "predicted": 229,
+        "matched": 52
+      }
+    },
+    "11231_bartleby_the_scrivener_a_story_of_wallstreet": {
+      "doc_id": "11231_bartleby_the_scrivener_a_story_of_wallstreet",
+      "tokens": 2622,
+      "answered_tokens": 2622,
+      "candidate_tokens": 2622,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.06866952789699571,
+        "recall": 0.5714285714285714,
+        "f1": 0.12260536398467432,
+        "gold": 28,
+        "predicted": 233,
+        "matched": 16
+      }
+    },
+    "1342_pride_and_prejudice": {
+      "doc_id": "1342_pride_and_prejudice",
+      "tokens": 2021,
+      "answered_tokens": 2021,
+      "candidate_tokens": 2021,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.30597014925373134,
+        "recall": 0.803921568627451,
+        "f1": 0.4432432432432433,
+        "gold": 51,
+        "predicted": 134,
+        "matched": 41
+      }
+    },
+    "145_middlemarch": {
+      "doc_id": "145_middlemarch",
+      "tokens": 1999,
+      "answered_tokens": 1999,
+      "candidate_tokens": 1999,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.10526315789473684,
+        "recall": 1.0,
+        "f1": 0.1904761904761905,
+        "gold": 6,
+        "predicted": 57,
+        "matched": 6
+      }
+    },
+    "155_the_moonstone": {
+      "doc_id": "155_the_moonstone",
+      "tokens": 2030,
+      "answered_tokens": 2030,
+      "candidate_tokens": 2030,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.21397379912663755,
+        "recall": 0.7,
+        "f1": 0.3277591973244147,
+        "gold": 140,
+        "predicted": 458,
+        "matched": 98
+      }
+    },
+    "158_emma": {
+      "doc_id": "158_emma",
+      "tokens": 2063,
+      "answered_tokens": 2063,
+      "candidate_tokens": 2063,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.1978021978021978,
+        "recall": 0.8,
+        "f1": 0.3171806167400881,
+        "gold": 45,
+        "predicted": 182,
+        "matched": 36
+      }
+    },
+    "160_the_awakening_and_selected_short_stories": {
+      "doc_id": "160_the_awakening_and_selected_short_stories",
+      "tokens": 2020,
+      "answered_tokens": 2020,
+      "candidate_tokens": 2020,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.2205607476635514,
+        "recall": 0.8740740740740741,
+        "f1": 0.3522388059701492,
+        "gold": 135,
+        "predicted": 535,
+        "matched": 118
+      }
+    },
+    "16357_mary_a_fiction": {
+      "doc_id": "16357_mary_a_fiction",
+      "tokens": 2044,
+      "answered_tokens": 2044,
+      "candidate_tokens": 2044,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.09395973154362416,
+        "recall": 0.6363636363636364,
+        "f1": 0.16374269005847955,
+        "gold": 22,
+        "predicted": 149,
+        "matched": 14
+      }
+    },
+    "1695_the_man_who_was_thursday_a_nightmare": {
+      "doc_id": "1695_the_man_who_was_thursday_a_nightmare",
+      "tokens": 2067,
+      "answered_tokens": 2067,
+      "candidate_tokens": 2067,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.23636363636363636,
+        "recall": 0.6666666666666666,
+        "f1": 0.348993288590604,
+        "gold": 39,
+        "predicted": 110,
+        "matched": 26
+      }
+    },
+    "2084_the_way_of_all_flesh": {
+      "doc_id": "2084_the_way_of_all_flesh",
+      "tokens": 2052,
+      "answered_tokens": 2052,
+      "candidate_tokens": 2052,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.1631578947368421,
+        "recall": 0.8378378378378378,
+        "f1": 0.27312775330396477,
+        "gold": 37,
+        "predicted": 190,
+        "matched": 31
+      }
+    },
+    "208_daisy_miller_a_study": {
+      "doc_id": "208_daisy_miller_a_study",
+      "tokens": 2005,
+      "answered_tokens": 2005,
+      "candidate_tokens": 2005,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.20135746606334842,
+        "recall": 0.9270833333333334,
+        "f1": 0.33085501858736055,
+        "gold": 96,
+        "predicted": 442,
+        "matched": 89
+      }
+    },
+    "209_the_turn_of_the_screw": {
+      "doc_id": "209_the_turn_of_the_screw",
+      "tokens": 2027,
+      "answered_tokens": 2027,
+      "candidate_tokens": 2027,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.21321961620469082,
+        "recall": 0.8620689655172413,
+        "f1": 0.34188034188034183,
+        "gold": 116,
+        "predicted": 469,
+        "matched": 100
+      }
+    },
+    "215_the_call_of_the_wild": {
+      "doc_id": "215_the_call_of_the_wild",
+      "tokens": 2016,
+      "answered_tokens": 2016,
+      "candidate_tokens": 2016,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.13973063973063973,
+        "recall": 0.9021739130434783,
+        "f1": 0.24198250728862974,
+        "gold": 92,
+        "predicted": 594,
+        "matched": 83
+      }
+    },
+    "2166_king_solomons_mines": {
+      "doc_id": "2166_king_solomons_mines",
+      "tokens": 2078,
+      "answered_tokens": 2078,
+      "candidate_tokens": 2078,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.1891891891891892,
+        "recall": 0.7924528301886793,
+        "f1": 0.3054545454545455,
+        "gold": 53,
+        "predicted": 222,
+        "matched": 42
+      }
+    },
+    "271_black_beauty": {
+      "doc_id": "271_black_beauty",
+      "tokens": 2014,
+      "answered_tokens": 2014,
+      "candidate_tokens": 2014,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.13933236574746008,
+        "recall": 0.9504950495049505,
+        "f1": 0.24303797468354427,
+        "gold": 101,
+        "predicted": 689,
+        "matched": 96
+      }
+    },
+    "41286_miss_marjoribanks": {
+      "doc_id": "41286_miss_marjoribanks",
+      "tokens": 2744,
+      "answered_tokens": 2744,
+      "candidate_tokens": 2744,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.20215633423180593,
+        "recall": 0.6198347107438017,
+        "f1": 0.30487804878048785,
+        "gold": 121,
+        "predicted": 371,
+        "matched": 75
+      }
+    },
+    "434_the_circular_staircase": {
+      "doc_id": "434_the_circular_staircase",
+      "tokens": 2060,
+      "answered_tokens": 2060,
+      "candidate_tokens": 2060,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.13766233766233765,
+        "recall": 0.8548387096774194,
+        "f1": 0.23713646532438476,
+        "gold": 62,
+        "predicted": 385,
+        "matched": 53
+      }
+    },
+    "44_the_song_of_the_lark": {
+      "doc_id": "44_the_song_of_the_lark",
+      "tokens": 2051,
+      "answered_tokens": 2051,
+      "candidate_tokens": 2051,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.19011406844106463,
+        "recall": 0.8771929824561403,
+        "f1": 0.3125,
+        "gold": 114,
+        "predicted": 526,
+        "matched": 100
+      }
+    },
+    "472_the_house_behind_the_cedars": {
+      "doc_id": "472_the_house_behind_the_cedars",
+      "tokens": 2024,
+      "answered_tokens": 2024,
+      "candidate_tokens": 2024,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.2302839116719243,
+        "recall": 0.8902439024390244,
+        "f1": 0.3659147869674186,
+        "gold": 82,
+        "predicted": 317,
+        "matched": 73
+      }
+    },
+    "521_the_life_and_adventures_of_robinson_crusoe": {
+      "doc_id": "521_the_life_and_adventures_of_robinson_crusoe",
+      "tokens": 2276,
+      "answered_tokens": 2276,
+      "candidate_tokens": 2276,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.17220543806646527,
+        "recall": 0.8636363636363636,
+        "f1": 0.2871536523929471,
+        "gold": 66,
+        "predicted": 331,
+        "matched": 57
+      }
+    },
+    "541_the_age_of_innocence": {
+      "doc_id": "541_the_age_of_innocence",
+      "tokens": 2011,
+      "answered_tokens": 2011,
+      "candidate_tokens": 2011,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.17410714285714285,
+        "recall": 0.7959183673469388,
+        "f1": 0.2857142857142857,
+        "gold": 49,
+        "predicted": 224,
+        "matched": 39
+      }
+    },
+    "62_a_princess_of_mars": {
+      "doc_id": "62_a_princess_of_mars",
+      "tokens": 2022,
+      "answered_tokens": 2022,
+      "candidate_tokens": 2022,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.15466101694915255,
+        "recall": 0.8690476190476191,
+        "f1": 0.262589928057554,
+        "gold": 84,
+        "predicted": 472,
+        "matched": 73
+      }
+    },
+    "711_allan_quatermain": {
+      "doc_id": "711_allan_quatermain",
+      "tokens": 2000,
+      "answered_tokens": 2000,
+      "candidate_tokens": 2000,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.2830188679245283,
+        "recall": 0.9146341463414634,
+        "f1": 0.4322766570605187,
+        "gold": 82,
+        "predicted": 265,
+        "matched": 75
+      }
+    },
+    "766_david_copperfield": {
+      "doc_id": "766_david_copperfield",
+      "tokens": 2016,
+      "answered_tokens": 2016,
+      "candidate_tokens": 2016,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.1888412017167382,
+        "recall": 0.8712871287128713,
+        "f1": 0.3104056437389771,
+        "gold": 101,
+        "predicted": 466,
+        "matched": 88
+      }
+    },
+    "768_wuthering_heights": {
+      "doc_id": "768_wuthering_heights",
+      "tokens": 2034,
+      "answered_tokens": 2034,
+      "candidate_tokens": 2034,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.21927710843373494,
+        "recall": 0.8584905660377359,
+        "f1": 0.34932821497120925,
+        "gold": 106,
+        "predicted": 415,
+        "matched": 91
+      }
+    },
+    "84_frankenstein_or_the_modern_prometheus": {
+      "doc_id": "84_frankenstein_or_the_modern_prometheus",
+      "tokens": 2385,
+      "answered_tokens": 2385,
+      "candidate_tokens": 2385,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.17535545023696683,
+        "recall": 0.8222222222222222,
+        "f1": 0.2890625,
+        "gold": 45,
+        "predicted": 211,
+        "matched": 37
+      }
+    },
+    "974_the_secret_agent_a_simple_tale": {
+      "doc_id": "974_the_secret_agent_a_simple_tale",
+      "tokens": 2507,
+      "answered_tokens": 2507,
+      "candidate_tokens": 2507,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.09803921568627451,
+        "recall": 0.9259259259259259,
+        "f1": 0.1773049645390071,
+        "gold": 27,
+        "predicted": 255,
+        "matched": 25
+      }
+    },
+    "9830_the_beautiful_and_damned": {
+      "doc_id": "9830_the_beautiful_and_damned",
+      "tokens": 2072,
+      "answered_tokens": 2072,
+      "candidate_tokens": 2072,
+      "failed_batches": 0,
+      "metrics": {
+        "precision": 0.08408408408408409,
+        "recall": 0.9333333333333333,
+        "f1": 0.15426997245179064,
+        "gold": 30,
+        "predicted": 333,
+        "matched": 28
+      }
+    }
+  },
+  "notes": [
+    "Jev returns typed decisions, not free-form annotation JSON. This event task uses one yes/no decision per token and is an interface-adapted result, not a like-for-like generation-format run.",
+    "Probability threshold 0.5 was fixed before held-out evaluation and not tuned on the test split.",
+    "Invalid or missing decisions remain uncovered and are treated as negative predictions for scoring."
+  ]
+}

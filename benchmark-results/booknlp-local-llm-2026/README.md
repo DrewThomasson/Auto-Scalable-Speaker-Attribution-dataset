@@ -82,6 +82,10 @@ BookNLP small exceeds every tested local model on these full test cohorts. Gemma
 
 The aggregate evidence does not yet support using any tested model as an unattended, large-scale synthetic-data teacher. In particular, coreference F1 and output validity are weak, and this study contains no multilingual gold set or downstream student training. A future compact-label or multi-pass interface would be a new experiment, with its own frozen prompts and held-out evaluation.
 
+## Supplementary Jev 1.13 event result
+
+TypeSafe Jev 1.13 is a hosted decision model, not a local generative LLM. It was run separately through OpenRouter's native yes/no-per-token Decisions API on the same held-out 30-book event test split. With a fixed `P(yes) >= 0.5` threshold, Jev scored micro P/R/F1 **0.1799 / 0.8041 / 0.2940**, versus BookNLP small's **0.7452 / 0.6664 / 0.7036**. All 63,625 token decisions were answered. The request protocol is different from the JSON-span generation rows above, and this run evaluates events only. See [full Jev results and limitations](JEV_EVENT_SUPPLEMENT.md), [exact decision prompt](prompts/jev_events.md), and [JSON results](results/jev_test_events.json).
+
 ## Reproduction and provenance
 
 The local experiment driver and full caches are not published here because prompts were applied to licensed held-out text and the user requested a one-folder local experiment. In the original local directory, `./run_remaining_cohorts.sh` reuses completed rows and caches; results and configuration are summarized in `reports/comparison.md`, `results/summary.csv`, and `results/summary.json`. The dataset/repository commits and exact runtime details are recorded there under `logs/` and `models/`. The full local experiment folder may be deleted independently of this public aggregate report.
