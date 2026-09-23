@@ -6,7 +6,7 @@ from pathlib import Path
 import sys
 ROOT=Path(os.environ.get("BOOKNLP_EXPERIMENT_ROOT","/home/drew/booknlp_llm_experiment")).resolve()
 sys.path.insert(0,str(ROOT/"src"))
-from booknlp_experiment.benchmark import load_docs,select_task_split
+from booknlp_experiment.benchmark import load_docs,select_task_split,metric_for
 
 HERE=Path(__file__).resolve().parents[1]
 PRED=ROOT/"results/exhaustive/predictions"
@@ -48,7 +48,8 @@ def main():
                 for x in g:g_by_type[x.get("mention_type","UNKNOWN")].add((x["start_token"],x["end_token"]))
                 docs_out.append({"doc_id":docid,"gold_mention_type_recall":{k:(len(v&p)/len(v) if v else 0) for k,v in g_by_type.items()},"exact_mention_span_f1":prf(len(set().union(*g_by_type.values())&p),len(p),sum(len(v) for v in g_by_type.values()))})
             elif task=="speakers":
-                docs_out.append({"doc_id":docid,"joint_speaker_B3_F1":r.get("joint_quote_speaker_B3_f1"),"conditional_speaker_B3":r.get("speaker_B3"),"gold_quotes":r.get("gold_quotes"),"predicted_quotes":len(pred),"exact_quote_matches":r.get("exact_quote_matches")})
+                m=metric_for("speakers",doc["gold"],pred)
+                docs_out.append({"doc_id":docid,"joint_speaker_B3_F1":m.get("joint_quote_speaker_B3_f1"),"conditional_speaker_B3":m.get("speaker_B3"),"gold_quotes":m.get("gold_quotes"),"predicted_quotes":m.get("predicted_quotes"),"exact_quote_matches":m.get("exact_quote_matches")})
             else:
                 docs_out.append({"doc_id":docid,"primary_metrics":r})
         class_metrics={k:prf(*v) for k,v in classes.items()}
