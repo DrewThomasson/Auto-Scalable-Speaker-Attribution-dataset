@@ -1,6 +1,6 @@
 # Exhaustive inference-time-compute benchmark
 
-**Status: implementation and local validation in progress; no complete test-cohort exhaustive result is claimed yet.** This benchmark is designed to test whether low scores in the existing [document-enumeration benchmark](../booknlp-local-llm-2026/README.md) are partly caused by requiring one large annotation enumeration. It preserves that benchmark unchanged and runs beside it.
+**Status: the exhaustive test matrix is active and resumable; Qwen3.5 0.8B events is the first completed held-out cohort.** This benchmark tests whether low scores in the existing [document-enumeration benchmark](../booknlp-local-llm-2026/README.md) are partly caused by requiring one large annotation enumeration. It preserves that benchmark unchanged and runs beside it.
 
 ## Research design
 
@@ -63,7 +63,7 @@ Original project tests: `cd /home/drew/booknlp_llm_experiment && .venv/bin/pytho
 
 ## Results
 
-See [`RESULTS.md`](RESULTS.md). A row is included only when measured on a documented number of held-out documents. Validation pilots are labeled as validation and are not compared as final scores. Invalid batches remain represented as negative/none decisions and are reported. The model work is underway; this README intentionally makes no claim yet about whether any model improves or is a suitable synthetic-label teacher.
+See [`RESULTS.md`](RESULTS.md) for measured cohort coverage, precision/recall/F1, comparisons, ablations, and inference cost. The first completed cohort, Qwen3.5 0.8B events, reached 69.9% recall but only 4.0% precision (F1 0.0748), far below BookNLP-small's 0.7036 on the same excerpts. Its uncalibrated top-25%-coverage teacher subset also remained low precision (3.7%). This is not evidence that the 0.8B model is a useful event-label teacher; results for the other model/task cohorts are still pending. The full non-text per-document summary is in [`results/summaries/qwen3.5_0.8b_test_events.json`](results/summaries/qwen3.5_0.8b_test_events.json); aggregate CSV/JSON files are alongside it.
 
 ## Licensing and privacy
 

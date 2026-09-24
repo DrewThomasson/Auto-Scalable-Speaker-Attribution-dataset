@@ -52,3 +52,18 @@ def test_teacher_curve_keeps_restarted_token_offsets_document_scoped():
     full=curve["points"][-1]
     assert full["precision"] == 0.5
     assert full["gold_recall"] == 0.5
+
+def test_aggregate_uses_matching_primary_metric_from_frozen_baseline_schema():
+    aggregate_path = Path(__file__).parents[1] / "scripts" / "aggregate.py"
+    spec = importlib.util.spec_from_file_location("exhaustive_aggregate", aggregate_path)
+    aggregate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(aggregate)
+    event_baseline = {"task":"events", "micro_metrics":{"f1":0.7},
+                      "macro_metrics":{"f1":0.65}}
+    coref_baseline = {"task":"coref", "macro_metrics":{"CoNLL_F1":0.61}}
+    speaker_baseline = {"task":"speakers", "macro_metrics":{"joint_quote_speaker_B3_f1":0.42}}
+    event_exhaustive = {"task":"events", "metrics":{"f1":0.08}}
+    assert aggregate.f1(event_baseline) == 0.7
+    assert aggregate.f1(coref_baseline) == 0.61
+    assert aggregate.f1(speaker_baseline) == 0.42
+    assert aggregate.f1(event_exhaustive) == 0.08

@@ -1,1 +1,31 @@
-[]
+[
+  {
+    "model": "qwen3.5:0.8b",
+    "task": "events",
+    "documents_completed": 30,
+    "documents_expected": 30,
+    "complete": true,
+    "status": "complete",
+    "exhaustive_precision": 0.039538714991762765,
+    "exhaustive_recall": 0.6987060998151571,
+    "exhaustive_f1_or_primary": 0.07484222249721569,
+    "old_method_f1_or_primary": null,
+    "booknlp_small_f1_or_primary": 0.7035862405464748,
+    "delta_vs_old": null,
+    "delta_vs_booknlp": -0.6287440180492591,
+    "inference_calls": 127577,
+    "input_tokens": 80675317,
+    "output_tokens": 1150818,
+    "output_tokens_per_second": 25.72457191014549,
+    "wall_seconds": 44736.138040304184,
+    "peak_gpu_used_mib": 1709,
+    "peak_system_ram_used_mib": 17219,
+    "invalid_batches": 0,
+    "invalid_followups": 0,
+    "context_tokens": 8192,
+    "temperature": 0,
+    "model_digest": "f3817196d142eaf72ce79dfebe53dcb20bd21da87ce13e138a8f8e10a866b3a4",
+    "split": "test",
+    "method": "single-token exhaustive multi-pass"
+  }
+]

@@ -4,11 +4,19 @@
 
 ## Old interface versus exhaustive interface
 
-All values use the same task test cohort and metric. `Δ` is exhaustive minus old-interface score; the BookNLP score is a separate local pipeline run on the same documents. A row is complete only when completed documents equal the baseline cohort size.
+All values use the same task test cohort and primary metric. For span-label tasks, precision/recall/F1 are pooled micro scores; coreference uses official CoNLL F1; speakers use joint quote/speaker B³. `Δ` is exhaustive minus the comparable score. The BookNLP score is a separate local pipeline run on the same documents. A row is complete only when completed documents equal the baseline cohort size.
 
-| Model | Task | Completed / expected | Old method | Exhaustive | Δ vs old | BookNLP small | Δ vs BookNLP | Calls | Wall h | Status |
-| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| — | — | 0/— | — | — | — | — | — | — | — | pending |
+| Model | Task | Completed / expected | Exhaustive P / R / F1 | Old method F1 | Δ vs old | BookNLP small F1 | Δ vs BookNLP | Calls | Wall h | Output tok/s | Peak GPU / RAM MiB | Invalid | Status |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| qwen3.5:0.8b | events | 30/30 | 0.0395 / 0.6987 / 0.0748 | — | — | 0.7036 | -0.6287 | 127577 | 12.43 | 25.72 | 1709 / 17219 | 0 | complete |
+
+## Inference-stage ablations
+
+Stages are measured on the same completed cohort; these are descriptive ablations, not independently tuned test-set prompts.
+
+| Model | Task | Documents | Stage F1 (stage: score) |
+| --- | --- | ---: | --- |
+| qwen3.5:0.8b | events | 30 | pass1: 0.0767; two_pass_vote: 0.0780; final: 0.0748 |
 
 `results/comparison.csv` and `.json` contain the test values and resource fields. Per-model/task JSON summaries include per-document scores, pass-level ablations, teacher-mode curves, and inference counters. Private token-level generations remain in the local experiment folder and are not part of this export.
 
