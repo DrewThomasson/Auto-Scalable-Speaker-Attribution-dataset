@@ -1,0 +1,301 @@
+{
+  "validated_at_utc": "2026-09-24T01:07:00.593305+00:00",
+  "model": "openai/gpt-6-luna-pro",
+  "provider": "OpenAI",
+  "total_documents": 195,
+  "total_requests_with_responses": 195,
+  "http_attempts": 195,
+  "duplicate_or_retried_requests": 0,
+  "schema_valid": 194,
+  "valid_json": 194,
+  "invalid_or_failed": 1,
+  "reported_cost_usd": 1.870728935,
+  "validation_test_overlap_counts": {
+    "entities": 0,
+    "events": 0,
+    "coref": 10,
+    "quotes": 0,
+    "speakers": 0,
+    "supersenses": 0
+  },
+  "tasks": {
+    "entities": {
+      "documents": 10,
+      "schema_valid": 9,
+      "valid_json": 9,
+      "reported_cost_usd": 0.05232006,
+      "summary": {
+        "task": "entities",
+        "documents_expected": 10,
+        "documents_scored": 10,
+        "schema_valid": 9,
+        "valid_json": 9,
+        "invalid_or_failed": 1,
+        "mean_latency_seconds": 15.981548610900063,
+        "macro_metrics": {
+          "precision": 0.311783307688428,
+          "recall": 0.23787453934243988,
+          "f1": 0.2673603098814398,
+          "gold": 132.6,
+          "predicted": 90.7,
+          "matched": 32.0
+        },
+        "reported_usage": {
+          "prompt_tokens": 423812.0,
+          "completion_tokens": 38503.0,
+          "total_tokens": 462315.0,
+          "cost": 0.05232006
+        },
+        "cache_read_tokens": 117241.0,
+        "pooled_metrics": {
+          "precision": 0.3528114663726571,
+          "recall": 0.24132730015082957,
+          "f1": 0.28660994178235555,
+          "matched": 320,
+          "predicted": 907,
+          "gold": 1326
+        }
+      }
+    },
+    "events": {
+      "documents": 30,
+      "schema_valid": 30,
+      "valid_json": 30,
+      "reported_cost_usd": 0.14240278,
+      "summary": {
+        "task": "events",
+        "documents_expected": 30,
+        "documents_scored": 30,
+        "schema_valid": 30,
+        "valid_json": 30,
+        "invalid_or_failed": 0,
+        "mean_latency_seconds": 11.516039250550481,
+        "macro_metrics": {
+          "precision": 0.38844135111052214,
+          "recall": 0.6712148842017047,
+          "f1": 0.4526176080525827,
+          "gold": 72.13333333333334,
+          "predicted": 123.66666666666667,
+          "matched": 47.06666666666667
+        },
+        "reported_usage": {
+          "prompt_tokens": 1252671.0,
+          "completion_tokens": 89092.0,
+          "total_tokens": 1341763.0,
+          "cost": 0.14240278
+        },
+        "cache_read_tokens": 353783.0,
+        "pooled_metrics": {
+          "precision": 0.3805929919137466,
+          "recall": 0.6524953789279113,
+          "f1": 0.48076268300987396,
+          "matched": 1412,
+          "predicted": 3710,
+          "gold": 2164
+        }
+      }
+    },
+    "coref": {
+      "documents": 100,
+      "schema_valid": 100,
+      "valid_json": 100,
+      "reported_cost_usd": 1.010598005,
+      "summary": {
+        "task": "coref",
+        "documents_expected": 100,
+        "documents_scored": 100,
+        "schema_valid": 100,
+        "valid_json": 100,
+        "invalid_or_failed": 0,
+        "mean_latency_seconds": 39.99094603435951,
+        "macro_metrics": {
+          "mention_span_f1": 0.5147030297749364,
+          "common_mentions": 150.31,
+          "MUC": {
+            "precision": 0.559882578157736,
+            "recall": 0.5355264103066084,
+            "f1": 0.5446153300058253
+          },
+          "B3": {
+            "precision": 0.36764019241240836,
+            "recall": 0.33647291134563206,
+            "f1": 0.3469800888192844
+          },
+          "CEAF_e": {
+            "precision": 0.2148760617703994,
+            "recall": 0.21466292801364464,
+            "f1": 0.20890615352559594
+          },
+          "CoNLL_F1": 0.3668338574502352
+        },
+        "reported_usage": {
+          "prompt_tokens": 5087222.0,
+          "completion_tokens": 1180212.0,
+          "total_tokens": 6267434.0,
+          "cost": 1.010598005
+        },
+        "cache_read_tokens": 1166198.0,
+        "official_scorer_metrics": {
+          "MUC": {
+            "precision": 0.5785,
+            "recall": 0.5523,
+            "f1": 0.5650999999999999
+          },
+          "B3": {
+            "precision": 0.3696,
+            "recall": 0.3398,
+            "f1": 0.35409999999999997
+          },
+          "CEAF_e": {
+            "precision": 0.2022,
+            "recall": 0.2101,
+            "f1": 0.2061
+          },
+          "CoNLL_F1": 0.3751,
+          "duplicate_mentions_removed_for_scorer": 36,
+          "duplicate_span_cluster_conflicts_first_prediction_kept": 34,
+          "scorer": "reference-coreference-scorers v8.01"
+        }
+      }
+    },
+    "quotes": {
+      "documents": 10,
+      "schema_valid": 10,
+      "valid_json": 10,
+      "reported_cost_usd": 0.032444785000000004,
+      "summary": {
+        "task": "quotes",
+        "documents_expected": 10,
+        "documents_scored": 10,
+        "schema_valid": 10,
+        "valid_json": 10,
+        "invalid_or_failed": 0,
+        "mean_latency_seconds": 2.9747172717005013,
+        "macro_metrics": {
+          "precision": 0.5875170068027211,
+          "recall": 0.6031624243900459,
+          "f1": 0.5934285714285714,
+          "gold": 19.8,
+          "predicted": 20.4,
+          "matched": 14.5
+        },
+        "reported_usage": {
+          "prompt_tokens": 390733.0,
+          "completion_tokens": 4912.0,
+          "total_tokens": 395645.0,
+          "cost": 0.032444785000000004
+        },
+        "cache_read_tokens": 117271.0,
+        "pooled_metrics": {
+          "precision": 0.7107843137254902,
+          "recall": 0.7323232323232324,
+          "f1": 0.7213930348258707,
+          "matched": 145,
+          "predicted": 204,
+          "gold": 198
+        }
+      }
+    },
+    "speakers": {
+      "documents": 10,
+      "schema_valid": 10,
+      "valid_json": 10,
+      "reported_cost_usd": 0.037749035,
+      "summary": {
+        "task": "speakers",
+        "documents_expected": 10,
+        "documents_scored": 10,
+        "schema_valid": 10,
+        "valid_json": 10,
+        "invalid_or_failed": 0,
+        "mean_latency_seconds": 5.851925973780453,
+        "macro_metrics": {
+          "quote_boundary_precision": 0.5933767879407414,
+          "quote_boundary_recall": 0.6166203196254347,
+          "quote_boundary_f1": 0.6018480535935211,
+          "speaker_B3": {
+            "precision": 0.7654233449477352,
+            "recall": 0.760001461552585,
+            "f1": 0.7626593370978446
+          },
+          "joint_quote_speaker_B3_f1": 0.5719018258245255,
+          "gold_quotes": 19.8,
+          "predicted_quotes": 19.5,
+          "exact_quote_matches": 14.1
+        },
+        "reported_usage": {
+          "prompt_tokens": 400500.0,
+          "completion_tokens": 13119.0,
+          "total_tokens": 413619.0,
+          "cost": 0.037749035
+        },
+        "cache_read_tokens": 117931.0
+      }
+    },
+    "supersenses": {
+      "documents": 35,
+      "schema_valid": 35,
+      "valid_json": 35,
+      "reported_cost_usd": 0.59521427,
+      "summary": {
+        "task": "supersenses",
+        "documents_expected": 35,
+        "documents_scored": 35,
+        "schema_valid": 35,
+        "valid_json": 35,
+        "invalid_or_failed": 0,
+        "mean_latency_seconds": 65.95280503097788,
+        "macro_metrics": {
+          "precision": 0.5528937895142,
+          "recall": 0.7129243667225377,
+          "f1": 0.5885556343877623,
+          "gold": 515.3142857142857,
+          "predicted": 688.8285714285714,
+          "matched": 384.65714285714284
+        },
+        "reported_usage": {
+          "prompt_tokens": 2323723.0,
+          "completion_tokens": 799855.0,
+          "total_tokens": 3123578.0,
+          "cost": 0.59521427
+        },
+        "cache_read_tokens": 467642.0,
+        "pooled_metrics": {
+          "precision": 0.5584221659961011,
+          "recall": 0.746451541361721,
+          "f1": 0.6388895479890853,
+          "matched": 13463,
+          "predicted": 24109,
+          "gold": 18036
+        }
+      }
+    }
+  },
+  "checks": [
+    "all six frozen test cohorts have exact expected IDs in manifest order",
+    "each result prompt hash and cache key recompute from exact frozen prompt/token serialization",
+    "all rows resolve to requested GPT-6 Luna Pro slug and pinned DeepInfra provider",
+    "attempt ledger has one successful HTTP request per distinct cached task/document identity",
+    "attempt hashes exactly cover the frozen rows and summary token/cost totals match per-response API usage",
+    "each cached API response independently reparses to the saved prediction and task score",
+    "pooled and official CoNLL metrics independently recomputed",
+    "all predictions have valid token offsets after the original cleaner",
+    "validation/test overlap follows each frozen split definition (coref fold-0 dev is part of the tenfold test union)",
+    "per-task totals aggregate documents independently, avoiding cross-document token-ID collisions",
+    "OpenRouter generation metadata independently confirms provider, default service tier, resolved dated model, native token totals, and billed cost for all 195 calls; generation IDs are excluded from the public export."
+  ],
+  "service_tier_counts": {
+    "default": 195
+  },
+  "resolved_model_counts": {
+    "openai/gpt-6-luna-pro-20260922": 195
+  },
+  "generation_metadata_records": 195,
+  "generation_metadata_cost_usd": 1.870728935,
+  "generation_metadata_native_input_tokens": 9878661,
+  "generation_metadata_native_output_tokens": 2125693,
+  "generation_metadata_missing_details": 0,
+  "reported_reasoning_tokens": 4.0,
+  "responses_over_max_tokens_usage_count": 37,
+  "max_reported_completion_tokens": 29346.0
+}

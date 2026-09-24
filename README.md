@@ -15,10 +15,11 @@ The completed [BookNLP local LLM benchmark](benchmark-results/booknlp-local-llm-
 | Qwen3.5 9B, Q4_K_M | 0.1258 | 0.0621 | 0.0858 | 0.4246 | 0.1418 | 0.1371 |
 | Gemma 4 12B, Q4_K_M | 0.2342 | 0.1557 | 0.2435 | 0.6990 | 0.2996 | 0.2116 |
 | DeepSeek V4.1 Flash (OpenRouter / DeepInfra) | 0.3446 | 0.3521 | 0.3099 | 0.7646 | 0.2585 | 0.5380 |
+| GPT-6 Luna Pro (OpenRouter / OpenAI default) | 0.2866 | 0.4808 | 0.3751 | 0.7214 | **0.5719** | 0.6389 |
 
 Scores are pooled micro F1 for entities, events, quote boundaries, and supersenses; official CoNLL F1 for coreference; and joint quote/speaker B³ macro F1 for speakers. Test sizes by task are 10 / 30 / 100 / 10 / 10 / 35 documents, respectively. Published BookNLP numbers use different protocols and are reported separately in the benchmark documentation.
 
-**Current finding:** BookNLP small still scores higher on all six headline tasks. DeepSeek V4.1 Flash is the strongest tested LLM on entities, events, coreference, quote boundaries, and supersenses, while Gemma 12B retains the strongest joint speaker score. DeepSeek's quote F1 (0.7646) is close to BookNLP (0.7833), but its joint speaker B³ is 0.2585 versus Gemma's 0.2996 and BookNLP's 0.4216. The hosted run used the exact existing prompts and structured schemas; it cost $0.63370679 for 195 requests, with 188 schema-valid outputs. See the [complete hosted DeepSeek protocol and results](benchmark-results/hosted-deepseek-v4.1-flash/README.md). This remains an English benchmark and does not validate multilingual teacher quality.
+**Current finding:** BookNLP small leads GPT-6 Luna Pro on five of six headline tasks; Luna Pro has the best joint speaker B³ on this cohort (0.5719 vs. BookNLP 0.4216). Luna Pro scores 0.7214 on quote-only F1 and 0.7627 conditional speaker B³. Its full 195-request run cost $1.870728935, with 194 schema-valid outputs. See the [complete GPT-6 Luna Pro protocol and results](benchmark-results/hosted-gpt-6-luna-pro/README.md) and [DeepSeek results](benchmark-results/hosted-deepseek-v4.1-flash/README.md). This is an English test and does not validate multilingual performance or downstream student quality.
 
 ### New experiment: exhaustive atomic inference (in progress)
 
@@ -42,6 +43,7 @@ For Jev, event predictions use the fixed probability threshold 0.5. The high rec
 - [Exact task prompt templates](benchmark-results/booknlp-local-llm-2026/prompts/)
 - [Machine-readable test metrics (CSV and JSON)](benchmark-results/booknlp-local-llm-2026/results/)
 - [Dataset split manifest and measured model/runtime inventory](benchmark-results/booknlp-local-llm-2026/metadata/)
+- [GPT-6 Luna Pro hosted benchmark, scores, cost, and validation](benchmark-results/hosted-gpt-6-luna-pro/README.md)
 - [DeepSeek V4.1 Flash hosted benchmark, scores, cost, and validation](benchmark-results/hosted-deepseek-v4.1-flash/README.md)
 - [Previous GPT-4/manual review and model-training experiments](archive/legacy/README.md)
 

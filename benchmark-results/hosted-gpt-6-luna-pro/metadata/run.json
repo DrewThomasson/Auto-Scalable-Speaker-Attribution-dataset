@@ -1,0 +1,132 @@
+{
+  "benchmark_version": "booknlp-local-llm-2026",
+  "model": "openai/gpt-6-luna-pro",
+  "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+  "provider_pinned": "OpenAI",
+  "split": "test",
+  "tasks": [
+    "entities",
+    "events",
+    "coref",
+    "quotes",
+    "speakers",
+    "supersenses"
+  ],
+  "expected_documents": {
+    "entities": 10,
+    "events": 30,
+    "coref": 100,
+    "quotes": 10,
+    "speakers": 10,
+    "supersenses": 35
+  },
+  "reasoning": {
+    "effort": "none",
+    "include_reasoning": false
+  },
+  "max_output_tokens": 16384,
+  "legacy_context_setting": 32768,
+  "provider_context_length": 1050000,
+  "context_limit_note": "OpenRouter does not expose the baseline Ollama num_ctx control. Sent each full document unchunked; OpenAI default endpoint advertised 1,050,000-token context.",
+  "structured_output": "response_format=json_schema, strict=true, original task schema; endpoint advertised structured_outputs.",
+  "prompt_serialization": "exact frozen local prompt + newline + blank line + PASSAGE TOKENS header + every [zero_based_id] token, matching benchmark.prompt_for",
+  "split_protocols": {
+    "entities": {
+      "protocol": "official author 80/10/10 document split",
+      "split_file": "external/NAACL2019-literary-entities/data/litbank/test.ids",
+      "train_documents": 80,
+      "selected_documents": 10
+    },
+    "events": {
+      "protocol": "official author 80/10/10 document split",
+      "split_file": "external/ACL2019-literary-events/data/test.ids",
+      "train_documents": 60,
+      "selected_documents": 30
+    },
+    "coref": {
+      "protocol": "official 10-fold CV test-fold union (each book held out once)",
+      "split_file": "external/lrec2020-coref/data/litbank_tenfold_splits",
+      "selected_documents": 100
+    },
+    "quotes": {
+      "protocol": "fixed SHA-256 10% document holdout",
+      "split_file": "datasets/normalized/splits.json",
+      "selected_documents": 10
+    },
+    "speakers": {
+      "protocol": "fixed SHA-256 10% document holdout",
+      "split_file": "datasets/normalized/splits.json",
+      "selected_documents": 10
+    },
+    "supersenses": {
+      "protocol": "fixed SHA-256 10% document holdout",
+      "split_file": "datasets/normalized/splits.json",
+      "selected_documents": 35
+    }
+  },
+  "started_at_utc": "2026-09-23T22:55:54.983116+00:00",
+  "budget_limit_usd": 5.0,
+  "model_display_name": "OpenAI GPT-6 Luna Pro",
+  "resolved_model_versions": {
+    "openai/gpt-6-luna-pro-20260922": 195
+  },
+  "provider_counts": {
+    "OpenAI": 195
+  },
+  "service_tier_counts": {
+    "default": 195
+  },
+  "temperature": null,
+  "temperature_note": "Omitted because OpenAI endpoint metadata did not advertise temperature; provider default applied.",
+  "reasoning_mode_note": "Requested reasoning.effort=none and include_reasoning=false. Luna Pro is OpenRouter-described as the Pro serving variant; it remains a distinct model configuration from standard Luna.",
+  "provider_routing_note": "provider.order=[OpenAI], allow_fallbacks=false, require_parameters=true. No service_tier parameter was sent; post-run generation metadata confirms default tier for all 195 requests.",
+  "generation_metadata_cost_usd": 1.870728935,
+  "generation_metadata_native_input_tokens": 9878661,
+  "generation_metadata_native_output_tokens": 2125693,
+  "smoke_test_cost_usd": 0.00504692,
+  "smoke_test_excluded_from_test_scores_and_cost_total": true,
+  "observed_completion_usage_note": "API-reported completion usage exceeds max_tokens=16384 on some long documents, while finish_reason remains stop and reasoning_tokens are reported as zero. The configured request value is preserved; usage totals use API-reported tokens.",
+  "prompt_templates": {
+    "entities": {
+      "version": "entities v2",
+      "sha256": "9fb9acd3a4e6ed9bb7aea6c5ff9f7e56d97fe85c55a83ba0b13350376650ec30"
+    },
+    "events": {
+      "version": "events v1",
+      "sha256": "0f5cb10ada8335d8db92dc693060fe111d331d66a8b0d56b374ac5fe19b94c15"
+    },
+    "coref": {
+      "version": "coref v2",
+      "sha256": "772aa65a54cb51d7a13e3fe6d61ce02871fa5e86b1f7537dcd66b5c247c7a908"
+    },
+    "quotes": {
+      "version": "quotes v1",
+      "sha256": "5f44adcf33144fbbc667aacfcfc20a0db170921cd83c44ff585e2ef86012c52b"
+    },
+    "speakers": {
+      "version": "speakers v1",
+      "sha256": "39c8737cf333b1509d932e0cdc5d22bbfed4ffa64aba2468894bde83cb4b385a"
+    },
+    "supersenses": {
+      "version": "supersenses v1",
+      "sha256": "37fda86ce95ea3b785461b920b09a033311f702e3b3b1c4511d73259bba5e5e1"
+    }
+  },
+  "completed_at_utc": "2026-09-24T00:52:58.326989+00:00",
+  "benchmark_date_local": "2026-09-23 America/New_York",
+  "completion_date_utc": "2026-09-24",
+  "reproduction_environment": {
+    "python": "3.13.13",
+    "benchmark_repository_commit_at_run": "0702df395e9ed5953bb32839253654ad1e9241a5",
+    "local_scoring_module_sha256": "dd3287475ebed5e6c1a5ef310394b5512c85163105dbac1bad5ddf9f667559c4",
+    "coreference_scorer": "reference-coreference-scorers v8.01",
+    "generation_api": "OpenRouter chat completions API; OpenAI provider, default service tier",
+    "reproduction_note": "Requires /home/drew/booknlp_llm_experiment (or compatible private experiment checkout) and runtime OpenRouter credentials. The public repository intentionally omits licensed text and gold labels."
+  },
+  "request_attempts": 195,
+  "transport_failures": 0,
+  "retries": 0,
+  "reported_reasoning_tokens": 4.0,
+  "responses_over_max_tokens_usage_count": 37,
+  "max_reported_completion_tokens": 29346.0
+}

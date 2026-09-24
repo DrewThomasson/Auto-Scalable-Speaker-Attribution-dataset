@@ -1,0 +1,24 @@
+{
+  "checked_after_run_utc": "2026-09-24T00:59:48.293379+00:00",
+  "source": "OpenRouter generation metadata endpoint; aggregate only, generation IDs excluded",
+  "records": 195,
+  "service_tier_counts": {
+    "default": 195
+  },
+  "provider_counts": {
+    "OpenAI": 195
+  },
+  "resolved_model_counts": {
+    "openai/gpt-6-luna-pro-20260922": 195
+  },
+  "reported_cost_usd": 1.870728935,
+  "native_prompt_tokens": 9878661,
+  "native_completion_tokens": 2125693,
+  "openrouter_prompt_tokens": 1356855,
+  "openrouter_completion_tokens": 891443,
+  "generation_latency_seconds_total": 6848.663,
+  "generation_metadata_missing_cost_or_tier": 0,
+  "reported_reasoning_tokens": 4.0,
+  "responses_over_max_tokens_usage_count": 37,
+  "max_reported_completion_tokens": 29346.0
+}
