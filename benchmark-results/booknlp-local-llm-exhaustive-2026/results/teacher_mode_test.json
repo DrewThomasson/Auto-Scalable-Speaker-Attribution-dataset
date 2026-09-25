@@ -45,5 +45,52 @@
         "f1": 0.07484222249721569
       }
     ]
+  },
+  "qwen3.5:4b|events": {
+    "available": true,
+    "confidence_source": "vote agreement and/or local model confidence; uncalibrated",
+    "scope": "exact task labels",
+    "points": [
+      {
+        "fraction_of_model_predictions_retained": 0.25,
+        "selected_predictions": 1074,
+        "available_predictions": 4295,
+        "precision": 0.2839851024208566,
+        "gold_recall": 0.14094269870609982,
+        "f1": 0.18838789376158124
+      },
+      {
+        "fraction_of_model_predictions_retained": 0.5,
+        "selected_predictions": 2148,
+        "available_predictions": 4295,
+        "precision": 0.28165735567970207,
+        "gold_recall": 0.2795748613678373,
+        "f1": 0.28061224489795916
+      },
+      {
+        "fraction_of_model_predictions_retained": 0.75,
+        "selected_predictions": 3221,
+        "available_predictions": 4295,
+        "precision": 0.30208009934802854,
+        "gold_recall": 0.449630314232902,
+        "f1": 0.3613741875580316
+      },
+      {
+        "fraction_of_model_predictions_retained": 0.9,
+        "selected_predictions": 3866,
+        "available_predictions": 4295,
+        "precision": 0.29048111743404037,
+        "gold_recall": 0.5189463955637708,
+        "f1": 0.3724709784411277
+      },
+      {
+        "fraction_of_model_predictions_retained": 1.0,
+        "selected_predictions": 4295,
+        "available_predictions": 4295,
+        "precision": 0.2772991850989523,
+        "gold_recall": 0.550369685767098,
+        "f1": 0.36878773803994436
+      }
+    ]
   }
 }

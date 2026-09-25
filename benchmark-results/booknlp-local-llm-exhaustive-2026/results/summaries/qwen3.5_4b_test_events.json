@@ -1,0 +1,369 @@
+{
+  "model": "qwen3.5:4b",
+  "task": "events",
+  "split": "test",
+  "documents": 30,
+  "token_total": 63625,
+  "method": "exhaustive-token-enumeration-v1",
+  "runtime_settings": {
+    "ollama": "0.34.3",
+    "temperature": 0,
+    "thinking": false,
+    "context_tokens": 8192,
+    "candidate_tokens_per_request": 1,
+    "num_predict_per_atomic_call": 128
+  },
+  "model_digest": "2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd",
+  "runner_fingerprint": "4d4bf39b4f0e5f6a8c7f9e85b073f0bab2783bb367046ff9c4291db43cdd42e8",
+  "metrics": {
+    "precision": 0.2772991850989523,
+    "recall": 0.550369685767098,
+    "f1": 0.36878773803994436,
+    "matched": 1191,
+    "predicted": 4295,
+    "gold": 2164
+  },
+  "ablation_metrics": {
+    "pass1": {
+      "pooled_micro": {
+        "precision": 0.1948656557595105,
+        "recall": 0.6769870609981515,
+        "f1": 0.3026234249122082,
+        "matched": 1465,
+        "predicted": 7518,
+        "gold": 2164
+      }
+    },
+    "two_pass_vote": {
+      "pooled_micro": {
+        "precision": 0.29484095161721463,
+        "recall": 0.5097042513863216,
+        "f1": 0.37358171041490257,
+        "matched": 1103,
+        "predicted": 3741,
+        "gold": 2164
+      }
+    },
+    "final": {
+      "pooled_micro": {
+        "precision": 0.2772991850989523,
+        "recall": 0.550369685767098,
+        "f1": 0.36878773803994436,
+        "matched": 1191,
+        "predicted": 4295,
+        "gold": 2164
+      }
+    }
+  },
+  "teacher_mode": {
+    "available": true,
+    "confidence_source": "vote agreement and/or local model confidence; uncalibrated",
+    "scope": "exact task labels",
+    "points": [
+      {
+        "fraction_of_model_predictions_retained": 0.25,
+        "selected_predictions": 1074,
+        "available_predictions": 4295,
+        "precision": 0.2839851024208566,
+        "gold_recall": 0.14094269870609982,
+        "f1": 0.18838789376158124
+      },
+      {
+        "fraction_of_model_predictions_retained": 0.5,
+        "selected_predictions": 2148,
+        "available_predictions": 4295,
+        "precision": 0.28165735567970207,
+        "gold_recall": 0.2795748613678373,
+        "f1": 0.28061224489795916
+      },
+      {
+        "fraction_of_model_predictions_retained": 0.75,
+        "selected_predictions": 3221,
+        "available_predictions": 4295,
+        "precision": 0.30208009934802854,
+        "gold_recall": 0.449630314232902,
+        "f1": 0.3613741875580316
+      },
+      {
+        "fraction_of_model_predictions_retained": 0.9,
+        "selected_predictions": 3866,
+        "available_predictions": 4295,
+        "precision": 0.29048111743404037,
+        "gold_recall": 0.5189463955637708,
+        "f1": 0.3724709784411277
+      },
+      {
+        "fraction_of_model_predictions_retained": 1.0,
+        "selected_predictions": 4295,
+        "available_predictions": 4295,
+        "precision": 0.2772991850989523,
+        "gold_recall": 0.550369685767098,
+        "f1": 0.36878773803994436
+      }
+    ]
+  },
+  "per_document": {
+    "1023_bleak_house": {
+      "precision": 0.15,
+      "recall": 0.19672131147540983,
+      "f1": 0.17021276595744678,
+      "gold": 61,
+      "predicted": 80,
+      "matched": 12
+    },
+    "1064_the_masque_of_the_red_death": {
+      "precision": 0.24623115577889448,
+      "recall": 0.44954128440366975,
+      "f1": 0.3181818181818182,
+      "gold": 109,
+      "predicted": 199,
+      "matched": 49
+    },
+    "110_tess_of_the_durbervilles_a_pure_woman": {
+      "precision": 0.3130434782608696,
+      "recall": 0.5625,
+      "f1": 0.4022346368715084,
+      "gold": 64,
+      "predicted": 115,
+      "matched": 36
+    },
+    "11231_bartleby_the_scrivener_a_story_of_wallstreet": {
+      "precision": 0.08053691275167785,
+      "recall": 0.42857142857142855,
+      "f1": 0.13559322033898305,
+      "gold": 28,
+      "predicted": 149,
+      "matched": 12
+    },
+    "1342_pride_and_prejudice": {
+      "precision": 0.2912621359223301,
+      "recall": 0.5882352941176471,
+      "f1": 0.3896103896103896,
+      "gold": 51,
+      "predicted": 103,
+      "matched": 30
+    },
+    "145_middlemarch": {
+      "precision": 0.07272727272727272,
+      "recall": 0.6666666666666666,
+      "f1": 0.13114754098360654,
+      "gold": 6,
+      "predicted": 55,
+      "matched": 4
+    },
+    "155_the_moonstone": {
+      "precision": 0.36363636363636365,
+      "recall": 0.6,
+      "f1": 0.4528301886792453,
+      "gold": 140,
+      "predicted": 231,
+      "matched": 84
+    },
+    "158_emma": {
+      "precision": 0.25,
+      "recall": 0.4222222222222222,
+      "f1": 0.31404958677685946,
+      "gold": 45,
+      "predicted": 76,
+      "matched": 19
+    },
+    "160_the_awakening_and_selected_short_stories": {
+      "precision": 0.4126984126984127,
+      "recall": 0.5777777777777777,
+      "f1": 0.48148148148148145,
+      "gold": 135,
+      "predicted": 189,
+      "matched": 78
+    },
+    "16357_mary_a_fiction": {
+      "precision": 0.15053763440860216,
+      "recall": 0.6363636363636364,
+      "f1": 0.24347826086956523,
+      "gold": 22,
+      "predicted": 93,
+      "matched": 14
+    },
+    "1695_the_man_who_was_thursday_a_nightmare": {
+      "precision": 0.17272727272727273,
+      "recall": 0.48717948717948717,
+      "f1": 0.2550335570469799,
+      "gold": 39,
+      "predicted": 110,
+      "matched": 19
+    },
+    "2084_the_way_of_all_flesh": {
+      "precision": 0.13095238095238096,
+      "recall": 0.2972972972972973,
+      "f1": 0.1818181818181818,
+      "gold": 37,
+      "predicted": 84,
+      "matched": 11
+    },
+    "208_daisy_miller_a_study": {
+      "precision": 0.44370860927152317,
+      "recall": 0.6979166666666666,
+      "f1": 0.5425101214574899,
+      "gold": 96,
+      "predicted": 151,
+      "matched": 67
+    },
+    "209_the_turn_of_the_screw": {
+      "precision": 0.3722627737226277,
+      "recall": 0.4396551724137931,
+      "f1": 0.4031620553359684,
+      "gold": 116,
+      "predicted": 137,
+      "matched": 51
+    },
+    "215_the_call_of_the_wild": {
+      "precision": 0.27896995708154504,
+      "recall": 0.7065217391304348,
+      "f1": 0.39999999999999997,
+      "gold": 92,
+      "predicted": 233,
+      "matched": 65
+    },
+    "2166_king_solomons_mines": {
+      "precision": 0.21428571428571427,
+      "recall": 0.4528301886792453,
+      "f1": 0.2909090909090909,
+      "gold": 53,
+      "predicted": 112,
+      "matched": 24
+    },
+    "271_black_beauty": {
+      "precision": 0.25112107623318386,
+      "recall": 0.5544554455445545,
+      "f1": 0.345679012345679,
+      "gold": 101,
+      "predicted": 223,
+      "matched": 56
+    },
+    "41286_miss_marjoribanks": {
+      "precision": 0.3068181818181818,
+      "recall": 0.4462809917355372,
+      "f1": 0.36363636363636365,
+      "gold": 121,
+      "predicted": 176,
+      "matched": 54
+    },
+    "434_the_circular_staircase": {
+      "precision": 0.2159090909090909,
+      "recall": 0.6129032258064516,
+      "f1": 0.31932773109243695,
+      "gold": 62,
+      "predicted": 176,
+      "matched": 38
+    },
+    "44_the_song_of_the_lark": {
+      "precision": 0.3623853211009174,
+      "recall": 0.6929824561403509,
+      "f1": 0.47590361445783136,
+      "gold": 114,
+      "predicted": 218,
+      "matched": 79
+    },
+    "472_the_house_behind_the_cedars": {
+      "precision": 0.2710843373493976,
+      "recall": 0.5487804878048781,
+      "f1": 0.36290322580645157,
+      "gold": 82,
+      "predicted": 166,
+      "matched": 45
+    },
+    "521_the_life_and_adventures_of_robinson_crusoe": {
+      "precision": 0.27941176470588236,
+      "recall": 0.5757575757575758,
+      "f1": 0.37623762376237624,
+      "gold": 66,
+      "predicted": 136,
+      "matched": 38
+    },
+    "541_the_age_of_innocence": {
+      "precision": 0.3333333333333333,
+      "recall": 0.6122448979591837,
+      "f1": 0.43165467625899284,
+      "gold": 49,
+      "predicted": 90,
+      "matched": 30
+    },
+    "62_a_princess_of_mars": {
+      "precision": 0.2795031055900621,
+      "recall": 0.5357142857142857,
+      "f1": 0.36734693877551017,
+      "gold": 84,
+      "predicted": 161,
+      "matched": 45
+    },
+    "711_allan_quatermain": {
+      "precision": 0.3829787234042553,
+      "recall": 0.6585365853658537,
+      "f1": 0.48430493273542596,
+      "gold": 82,
+      "predicted": 141,
+      "matched": 54
+    },
+    "766_david_copperfield": {
+      "precision": 0.3710691823899371,
+      "recall": 0.5841584158415841,
+      "f1": 0.4538461538461538,
+      "gold": 101,
+      "predicted": 159,
+      "matched": 59
+    },
+    "768_wuthering_heights": {
+      "precision": 0.425,
+      "recall": 0.4811320754716981,
+      "f1": 0.45132743362831856,
+      "gold": 106,
+      "predicted": 120,
+      "matched": 51
+    },
+    "84_frankenstein_or_the_modern_prometheus": {
+      "precision": 0.1953125,
+      "recall": 0.5555555555555556,
+      "f1": 0.28901734104046245,
+      "gold": 45,
+      "predicted": 128,
+      "matched": 25
+    },
+    "974_the_secret_agent_a_simple_tale": {
+      "precision": 0.12080536912751678,
+      "recall": 0.6666666666666666,
+      "f1": 0.20454545454545453,
+      "gold": 27,
+      "predicted": 149,
+      "matched": 18
+    },
+    "9830_the_beautiful_and_damned": {
+      "precision": 0.17777777777777778,
+      "recall": 0.8,
+      "f1": 0.2909090909090909,
+      "gold": 30,
+      "predicted": 135,
+      "matched": 24
+    }
+  },
+  "inference": {
+    "calls": 127457,
+    "cache_hits": 0,
+    "prompt_tokens": 80532387,
+    "output_tokens": 841528,
+    "output_tokens_per_model_second": 12.34212986774983,
+    "model_wall_seconds": 68183.3694036007,
+    "wall_seconds": 68183.3694036007,
+    "latest_process_wall_seconds": 68278.45158600807,
+    "invalid_batches": 0,
+    "invalid_followups": 0,
+    "peak_gpu_used_mib": 4287,
+    "peak_system_ram_used_mib": 15073
+  },
+  "protocol": {
+    "protocol": "official author 80/10/10 document split",
+    "split_file": "external/ACL2019-literary-events/data/test.ids",
+    "train_documents": 60,
+    "selected_documents": 30
+  },
+  "gold_in_prompts": false,
+  "confidence": "un-calibrated vote agreement; selective scores are descriptive, not calibrated probabilities"
+}

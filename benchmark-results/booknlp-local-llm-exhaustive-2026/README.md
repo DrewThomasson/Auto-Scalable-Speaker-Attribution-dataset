@@ -1,6 +1,6 @@
 # Exhaustive inference-time-compute benchmark
 
-**Status: the exhaustive test matrix is active and resumable; Qwen3.5 0.8B events is the first completed held-out cohort.** This benchmark tests whether low scores in the existing [document-enumeration benchmark](../booknlp-local-llm-2026/README.md) are partly caused by requiring one large annotation enumeration. It preserves that benchmark unchanged and runs beside it.
+**Status: the exhaustive test matrix is active and resumable; Qwen3.5 0.8B and 4B events are complete, with Qwen3.5 9B events underway.** This benchmark tests whether low scores in the existing [document-enumeration benchmark](../booknlp-local-llm-2026/README.md) are partly caused by requiring one large annotation enumeration. It preserves that benchmark unchanged and runs beside it.
 
 ## Research design
 
@@ -63,7 +63,7 @@ Original project tests: `cd /home/drew/booknlp_llm_experiment && .venv/bin/pytho
 
 ## Results
 
-See [`RESULTS.md`](RESULTS.md) for measured cohort coverage, precision/recall/F1, comparisons, ablations, and inference cost. The first completed cohort, Qwen3.5 0.8B events, reached 69.9% recall but only 4.0% precision (F1 0.0748), far below BookNLP-small's 0.7036 on the same excerpts. Its uncalibrated top-25%-coverage teacher subset also remained low precision (3.7%). This is not evidence that the 0.8B model is a useful event-label teacher; results for the other model/task cohorts are still pending. The full non-text per-document summary is in [`results/summaries/qwen3.5_0.8b_test_events.json`](results/summaries/qwen3.5_0.8b_test_events.json); aggregate CSV/JSON files are alongside it.
+See [`RESULTS.md`](RESULTS.md) for measured cohort coverage, precision/recall/F1, comparisons, ablations, and inference cost. Qwen3.5 0.8B events reached P/R/F1 0.0395/0.6987/0.0748, far below BookNLP-small's 0.7036; its uncalibrated top-25%-coverage precision was 3.7%. Qwen3.5 4B exhaustive events reached P/R/F1 0.2773/0.5504/0.3688 on the full 30-excerpt test set, compared with 0.1658 F1 for the same model's original prompt (+0.2030), and 0.7036 for BookNLP-small. The 4B result took 18.94 hours and 127,457 local inference calls. Its uncalibrated top-25%-coverage precision was 28.4%, so high-precision teacher quality remains unestablished. Qwen3.5 9B events is underway; all other model/task cohorts remain pending. Full non-text per-document summaries: [`0.8B events`](results/summaries/qwen3.5_0.8b_test_events.json) and [`4B events`](results/summaries/qwen3.5_4b_test_events.json); aggregate CSV/JSON files are alongside them.
 
 ## Licensing and privacy
 
